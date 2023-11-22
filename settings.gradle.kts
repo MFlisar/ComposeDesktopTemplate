@@ -12,7 +12,7 @@ pluginManagement {
         id("org.jetbrains.compose").version(extra["compose.version"] as String)
         //id("org.gradle.toolchains.foojay-resolver-convention") version "0.7.0"
         //id("org.gradle.toolchains.foojay-resolver") version "0.7.0"
-        id("org.gradle.toolchains.foojay-resolver-convention") version "0.7.0"
+        id("org.gradle.toolchains.foojay-resolver-convention") version "0.4.0"
         //id("org.gradle.toolchains.foojay-resolver-convention").version(extra["foojay.version"] as String)
     }
 
