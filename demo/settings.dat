@@ -1,0 +1,9 @@
+Integer;window_width;1410
+Integer;window_height;747
+Integer;window_x;243
+Integer;window_y;159
+Integer;window_placement;0
+Bool;ExpandedLeftPane;false
+Bool;ExpandedRightPane;true
+Bool;AutoOpenLogPageOnNewLog;true
+Bool;AutoOpenLogPageOnError;true
