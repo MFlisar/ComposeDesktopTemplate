@@ -4,7 +4,13 @@ plugins {
     kotlin("multiplatform")
     kotlin("plugin.serialization")
     id("org.jetbrains.compose")
-    id("org.gradle.toolchains.foojay-resolver-convention") version("0.7.0")
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+        //vendor = JvmVendorSpec.ADOPTOPENJDK
+    }
 }
 
 kotlin {
