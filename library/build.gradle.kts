@@ -5,6 +5,13 @@ plugins {
     id("maven-publish")
 }
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+        //vendor = JvmVendorSpec.ADOPTIUM
+    }
+}
+
 kotlin {
     jvm {
         jvmToolchain(17)
@@ -16,8 +23,8 @@ kotlin {
 
                 api(compose.desktop.currentOs)
 
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.5.0")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
+                //implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.5.0")
+                //implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
 
                 // Aurora - Windows Only Theming and Components
                 implementation("org.pushing-pixels:aurora-theming:1.3.0")
@@ -28,9 +35,9 @@ kotlin {
                 api("org.jetbrains.compose.material:material-icons-extended-desktop:" + extra["compose.version"])
 
                 // Excel/CSV
-                api("org.apache.poi:poi:5.0.0")
-                api("org.apache.poi:poi-ooxml:5.0.0")
-                api("com.opencsv:opencsv:5.6")
+                //api("org.apache.poi:poi:5.0.0")
+                //api("org.apache.poi:poi-ooxml:5.0.0")
+                //api("com.opencsv:opencsv:5.6")
 
             }
         }
