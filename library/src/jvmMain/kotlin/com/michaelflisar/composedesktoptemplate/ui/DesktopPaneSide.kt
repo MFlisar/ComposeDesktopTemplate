@@ -39,13 +39,13 @@ fun DesktopPaneSide(
             verticalAlignment = Alignment.CenterVertically
         ) {
             if (side == PaneSide.Left) {
-                Icon(expanded)
+                ExpandIcon(expanded)
                 Title(label, expanded)
                 Spacer(Modifier.width(AppTheme.CONTENT_PADDING_SMALL))
             } else {
                 Spacer(Modifier.width(AppTheme.CONTENT_PADDING_SMALL))
                 Title(label, expanded)
-                Icon(expanded)
+                ExpandIcon(expanded)
             }
         }
         // Content
@@ -73,7 +73,7 @@ fun DesktopPaneSide(
 }
 
 @Composable
-private fun Icon(
+private fun ExpandIcon(
     expanded: UISetting.Bool,
     modifier: Modifier = Modifier
 ) {

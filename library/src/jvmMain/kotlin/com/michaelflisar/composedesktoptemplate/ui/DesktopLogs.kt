@@ -1,43 +1,83 @@
 package com.michaelflisar.composedesktoptemplate.ui
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.FileCopy
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.michaelflisar.composedesktoptemplate.classes.AppTheme
 import com.michaelflisar.composedesktoptemplate.classes.LocalAppState
 import com.michaelflisar.composedesktoptemplate.internal.LogLine
-import com.michaelflisar.composedesktoptemplate.classes.AppTheme
 import com.michaelflisar.composedesktoptemplate.ui.todo.MyScrollableLazyColumn
+import com.michaelflisar.composedesktoptemplate.utils.Util
 
 @Composable
-fun DesktopLogs() {
+fun DesktopLogs(
+    callerCellWidth: Dp = 128.dp
+) {
     val appState = LocalAppState.current
+    val scope = rememberCoroutineScope()
     val logs = appState.logs
-    MyScrollableLazyColumn(
-        Modifier.fillMaxWidth(),
-        AppTheme.ITEM_SPACING_MINI
-    ) {
-        if (logs.isEmpty()) {
-            item(-1) {
-                Text(text = "No logs found yet!", style = MaterialTheme.typography.body2)
-            }
-
-        } else {
-            logs.forEachIndexed { index, log ->
-                item {
-                    LogLine(log)
+    Column {
+        MyScrollableLazyColumn(
+            Modifier.fillMaxWidth().weight(1f),
+            AppTheme.ITEM_SPACING_MINI
+        ) {
+            if (logs.isEmpty()) {
+                item(-1) {
+                    Text(text = "No logs found yet!", style = MaterialTheme.typography.body2)
                 }
+
+            } else {
+                logs.forEachIndexed { index, log ->
+                    item {
+                        LogLine(log, callerCellWidth)
+                    }
+                }
+            }
+        }
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End)
+        ) {
+            IconButton(
+                enabled = appState.logs.isNotEmpty(),
+                onClick = {
+                    appState.logs.clear()
+                    appState.showSnackbar(scope, "Logs cleared!")
+                }
+            ) {
+                Icon(Icons.Default.Delete, null)
+            }
+            IconButton(
+                enabled = appState.logs.isNotEmpty(),
+                onClick = {
+                    Util.setClipboard(logs.joinToString("\n") { it.getConsoleLog() })
+                    appState.showSnackbar(scope, "Logs copied to clipboard!")
+                }
+            ) {
+                Icon(Icons.Default.FileCopy, null)
             }
         }
     }
 }
 
 @Composable
-private fun LogLine(log: LogLine) {
+private fun LogLine(
+    log: LogLine,
+    callerCellWidth: Dp
+) {
     val color = log.type.getColor()
     val color2 = color.copy(alpha = 0.8f)
     var text = log.info
@@ -61,7 +101,7 @@ private fun LogLine(log: LogLine) {
             fontWeight = FontWeight.Bold
         )
         Text(
-            modifier = Modifier.width(96.dp),
+            modifier = Modifier.width(callerCellWidth),
             text = log.caller,
             style = style,
             color = color2,

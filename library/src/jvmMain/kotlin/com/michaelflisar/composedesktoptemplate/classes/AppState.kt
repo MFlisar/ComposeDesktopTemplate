@@ -1,10 +1,15 @@
 package com.michaelflisar.composedesktoptemplate.classes
 
+import androidx.compose.material.ScaffoldState
+import androidx.compose.material.SnackbarDuration
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.michaelflisar.composedesktoptemplate.internal.InfoType
 import com.michaelflisar.composedesktoptemplate.internal.LogLine
 import com.michaelflisar.composedesktoptemplate.settings.Settings
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import java.io.File
 
 val LocalAppState = compositionLocalOf<AppState> { error("No value provided") }
@@ -19,7 +24,8 @@ fun rememberAppState(
     val customStatusInfos = remember { mutableStateOf<List<StatusInfo>>(emptyList()) }
     val countLogs = remember { derivedStateOf { logs.size } }
     val countLogErrors = remember { derivedStateOf { logs.count { it.type == InfoType.Error } } }
-    return AppState(settings, state, logs, customStatusInfos, countLogs, countLogErrors)
+    val scaffoldState = rememberScaffoldState()
+    return AppState(settings, state, logs, customStatusInfos, countLogs, countLogErrors, scaffoldState)
 }
 
 @Immutable
@@ -29,9 +35,21 @@ data class AppState internal constructor(
     internal val logs: SnapshotStateList<LogLine>,
     val customStatusInfos: MutableState<List<StatusInfo>>,
     val countLogs: State<Int>,
-    val countLogErrors: State<Int>
+    val countLogErrors: State<Int>,
+    val scaffoldState: ScaffoldState
 ) {
     fun setState(status: Status) {
         state.value = status
+    }
+
+    fun showSnackbar(
+        scope: CoroutineScope,
+        info: String,
+        actionLabel: String? = null,
+        duration: SnackbarDuration = SnackbarDuration.Short
+    ) {
+        scope.launch {
+            scaffoldState.snackbarHostState.showSnackbar(info, actionLabel, duration)
+        }
     }
 }
