@@ -23,7 +23,7 @@ import com.michaelflisar.composedesktoptemplate.ui.todo.MyVerticalDivider
 
 @Composable
 internal fun StatusBar(
-    customStatusInfo: MutableState<List<StatusInfo>>
+    footer: (@Composable (modifier: Modifier) -> Unit)? = null
 ) {
     val appState = LocalAppState.current
     val state = appState.state.value
@@ -49,15 +49,13 @@ internal fun StatusBar(
         verticalAlignment = Alignment.CenterVertically
     ) {
         CompositionLocalProvider(LocalContentColor provides MaterialTheme.colors.background) {
-            Text(modifier = mod, text = infoState, style = style)
+            if (infoState.isNotEmpty()) {
+                Text(modifier = mod, text = infoState, style = style)
+            }
             if (running) {
                 LinearProgressIndicator(modifier = Modifier.width(128.dp).padding(horizontal = AppTheme.ITEM_SPACING))
             }
-            Spacer(modifier = Modifier.weight(1f))
-            customStatusInfo.value.forEach {
-                MyVerticalDivider(color = MaterialTheme.colors.background)
-                Text(modifier = mod, text = it.info, style = style, fontWeight = it.fontWeight, color = it.color)
-            }
+            footer?.invoke(Modifier.weight(1f)) ?: Spacer(modifier = Modifier.weight(1f))
             MyVerticalDivider(color = MaterialTheme.colors.background)
             Text(modifier = mod, text = "Infos: $infos", style = style, fontWeight = FontWeight.Bold)
             MyVerticalDivider(color = MaterialTheme.colors.background)

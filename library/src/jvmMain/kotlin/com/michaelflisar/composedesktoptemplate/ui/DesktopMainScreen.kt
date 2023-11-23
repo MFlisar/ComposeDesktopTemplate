@@ -21,9 +21,9 @@ internal fun MainScreen(
     close: Boolean,
     leftPanel: (@Composable (modifier: Modifier) -> Unit)? = null,
     rightPanel: (@Composable (modifier: Modifier) -> Unit)? = null,
+    footer: (@Composable (modifier: Modifier) -> Unit)? = null,
     centerPanel: @Composable (modifier: Modifier) -> Unit
 ) {
-    val appState = LocalAppState.current
     MaterialTheme {
         BoxWithConstraints {
             val maxWidthLeft = maxWidth / 5
@@ -40,7 +40,7 @@ internal fun MainScreen(
                         rightPanel(Modifier.sizeIn(maxWidth = maxWidthRight).fillMaxHeight())
                     }
                 }
-                StatusBar(appState.customStatusInfos)
+                StatusBar(footer)
             }
         }
 

@@ -54,28 +54,16 @@ fun MyCheckbox(
         verticalAlignment = Alignment.CenterVertically
     ) {
         if (title.isNotEmpty()) {
-            Text(text = title, fontWeight = fontWeight)
+            Text(
+                modifier = Modifier.weight(1f),
+                text = title,
+                fontWeight = fontWeight)
         }
-        //val colors = if (color != Color.Unspecified) CheckboxDefaults.colors(
-        //    checkedColor = color
-        //) else CheckboxDefaults.colors()
         Icon(
             imageVector = if (checked) Icons.Default.CheckBox else Icons.Default.CheckBoxOutlineBlank,
             contentDescription = null,
             tint = if (checked) (color.takeIf { it != Color.Unspecified }
                 ?: MaterialTheme.colors.secondary) else MaterialTheme.colors.onSurface.copy(alpha = 0.6f)
         )
-        //androidx.compose.material.Checkbox(
-        //    modifier = Modifier
-        //        .focusable(false, interactionSource)
-        //        .hoverable(interactionSource, false),
-        //    checked = checked,
-        //    onCheckedChange = null,
-        //    enabled = enabled,
-        //    colors = if (color != Color.Unspecified) CheckboxDefaults.colors(
-        //        checkedColor = color
-        //    ) else CheckboxDefaults.colors(),
-        //    interactionSource = interactionSource
-        //)
     }
 }

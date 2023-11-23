@@ -22,15 +22,18 @@ kotlin {
         val jvmMain by getting {
             dependencies {
 
-                api(compose.desktop.currentOs)
+                implementation(compose.desktop.currentOs)
 
                 //implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.5.0")
                 //implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
 
                 // Aurora - Windows Only Theming and Components
-                implementation("org.pushing-pixels:aurora-theming:1.3.0")
-                api("org.pushing-pixels:aurora-component:1.3.0")
-                implementation("org.pushing-pixels:aurora-window:1.3.0")
+                //api("org.pushing-pixels:aurora-theming:1.3.0")
+                //api("org.pushing-pixels:aurora-component:1.3.0")
+                //api("org.pushing-pixels:aurora-window:1.3.0")
+                api("org.pushing-pixels:aurora-theming:2.0-SNAPSHOT")
+                api("org.pushing-pixels:aurora-component:2.0-SNAPSHOT")
+                api("org.pushing-pixels:aurora-window:2.0-SNAPSHOT")
 
                 // Icons
                 api("org.jetbrains.compose.material:material-icons-extended-desktop:" + extra["compose.version"])
@@ -44,15 +47,3 @@ kotlin {
         }
     }
 }
-
-/*
-project.afterEvaluate {
-    publishing {
-        publications {
-            create<MavenPublication>("maven") {
-                artifactId = "library"
-                from(components["release"])
-            }
-        }
-    }
-}*/

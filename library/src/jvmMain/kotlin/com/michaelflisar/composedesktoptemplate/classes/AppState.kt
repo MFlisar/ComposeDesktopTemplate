@@ -7,7 +7,7 @@ import com.michaelflisar.composedesktoptemplate.internal.LogLine
 import com.michaelflisar.composedesktoptemplate.settings.Settings
 import java.io.File
 
-val LocalAppState = compositionLocalOf<AppState>  { error("No value provided") }
+val LocalAppState = compositionLocalOf<AppState> { error("No value provided") }
 
 @Composable
 fun rememberAppState(
@@ -16,7 +16,7 @@ fun rememberAppState(
     val settings = remember(settingsFile) { mutableStateOf(Settings.read(settingsFile)) }
     val state = remember { mutableStateOf<Status>(Status.None) }
     val logs = remember { mutableStateListOf<LogLine>() }
-    val customStatusInfos= remember { mutableStateOf<List<StatusInfo>>(emptyList()) }
+    val customStatusInfos = remember { mutableStateOf<List<StatusInfo>>(emptyList()) }
     val countLogs = remember { derivedStateOf { logs.size } }
     val countLogErrors = remember { derivedStateOf { logs.count { it.type == InfoType.Error } } }
     return AppState(settings, state, logs, customStatusInfos, countLogs, countLogErrors)

@@ -8,7 +8,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
-import com.michaelflisar.composedesktoptemplate.desktopApplication
+import androidx.compose.ui.res.painterResource
+import com.michaelflisar.composedesktoptemplate.DesktopApplication
+import com.michaelflisar.composedesktoptemplate.DesktopWindow
 import com.michaelflisar.composedesktoptemplate.classes.LocalAppState
 import com.michaelflisar.composedesktoptemplate.classes.Status
 import com.michaelflisar.composedesktoptemplate.ui.*
@@ -26,13 +28,8 @@ import kotlin.io.path.absolutePathString
 
 fun main() {
     val path = File(Paths.get("").absolutePathString(), "settings.dat")
-    desktopApplication(
-        appName = "Demo App",
-        settings = path,
-        leftPanel = { ContentLeft(it) },
-        rightPanel = { ContentRight(it) },
-        centerPanel = { ContentCenter(it) },
-        menuCommands = { buildMenu() }
+    DesktopApplication(
+        settings = path
     ) {
         // init
         val appState = LocalAppState.current
@@ -44,6 +41,23 @@ fun main() {
                     expandedRightPane.value = true
             }
         }
+
+        DesktopWindow(
+            "Demo App",
+            leftPanel = { ContentLeft(it) },
+            rightPanel = { ContentRight(it) },
+            centerPanel = { ContentCenter(it) },
+            menuCommands = { buildMenu() }
+            //icon = painterResource("logo.png"),
+            //alwaysOnTop = alwaysOnTop.value,
+            //onClosed = {
+            //    val job = NamedPipe.stopAll(scope, null)
+            //    job.join()
+            //},
+            //footer = {
+            //    MainFooter(it, pipeState, filteredData, data, user)
+            //}
+        )
     }
 }
 
