@@ -24,6 +24,8 @@ fun AuroraApplicationScope.DesktopWindow(
     centerPanel: @Composable (modifier: Modifier) -> Unit,
     leftPanel: (@Composable (modifier: Modifier) -> Unit)? = null,
     rightPanel: (@Composable (modifier: Modifier) -> Unit)? = null,
+    maxWidthLeftInPercentages: Float = 1f/5f,
+    maxWidthRightInPercentages: Float = 1f/5f,
     footer: (@Composable (modifier: Modifier) -> Unit)? = null,
     menuCommands: @Composable (() -> CommandGroup)? = null,
     onClosed: (suspend () -> Unit)? = null
@@ -53,7 +55,9 @@ fun AuroraApplicationScope.DesktopWindow(
             leftPanel,
             rightPanel,
             footer,
-            centerPanel
+            centerPanel,
+            maxWidthLeftInPercentages,
+            maxWidthRightInPercentages
         )
     }
 }

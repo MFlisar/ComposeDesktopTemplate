@@ -22,12 +22,14 @@ internal fun MainScreen(
     leftPanel: (@Composable (modifier: Modifier) -> Unit)? = null,
     rightPanel: (@Composable (modifier: Modifier) -> Unit)? = null,
     footer: (@Composable (modifier: Modifier) -> Unit)? = null,
-    centerPanel: @Composable (modifier: Modifier) -> Unit
+    centerPanel: @Composable (modifier: Modifier) -> Unit,
+    maxWidthLeftInPercentages: Float,
+    maxWidthRightInPercentages: Float
 ) {
     MaterialTheme {
         BoxWithConstraints {
-            val maxWidthLeft = maxWidth / 5
-            val maxWidthRight = maxWidth / 5
+            val maxWidthLeft = maxWidth * maxWidthLeftInPercentages
+            val maxWidthRight = maxWidth * maxWidthRightInPercentages
             Column {
                 Row(modifier = Modifier.weight(1f).fillMaxHeight()) {
                     if (leftPanel != null) {
