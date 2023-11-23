@@ -7,3 +7,4 @@ Bool;ExpandedLeftPane;false
 Bool;ExpandedRightPane;true
 Bool;AutoOpenLogPageOnNewLog;true
 Bool;AutoOpenLogPageOnError;true
+Bool;AutoScrollLogs;true

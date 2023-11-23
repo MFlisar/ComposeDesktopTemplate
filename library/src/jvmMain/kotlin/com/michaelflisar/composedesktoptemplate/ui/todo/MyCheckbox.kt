@@ -55,7 +55,7 @@ fun MyCheckbox(
     ) {
         if (title.isNotEmpty()) {
             Text(
-                modifier = Modifier.weight(1f),
+                modifier = Modifier,//.weight(1f),
                 text = title,
                 fontWeight = fontWeight)
         }

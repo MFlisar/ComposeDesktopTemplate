@@ -83,7 +83,7 @@ private fun ContentRight(modifier: Modifier) {
         "Logs",
         Settings.EXPANDED_RIGHT_PANE
     ) {
-        DesktopLogs()
+        DesktopLogs(Settings.AUTO_SCROLL_LOGS)
     }
 }
 
