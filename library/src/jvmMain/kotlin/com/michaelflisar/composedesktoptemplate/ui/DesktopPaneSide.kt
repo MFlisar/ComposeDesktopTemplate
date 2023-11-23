@@ -15,6 +15,9 @@ import androidx.compose.ui.text.font.FontWeight
 import com.michaelflisar.composedesktoptemplate.classes.LocalAppState
 import com.michaelflisar.composedesktoptemplate.settings.UISetting
 import com.michaelflisar.composedesktoptemplate.classes.AppTheme
+import org.pushingpixels.aurora.theming.LocalSkinColors
+import org.pushingpixels.aurora.theming.LocalTextColor
+import org.pushingpixels.aurora.theming.colorscheme.AuroraColorScheme
 
 enum class PaneSide {
     Left, Right

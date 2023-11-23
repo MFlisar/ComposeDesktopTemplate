@@ -19,7 +19,11 @@ import com.michaelflisar.composedesktoptemplate.classes.LocalAppState
 import com.michaelflisar.composedesktoptemplate.classes.Status
 import com.michaelflisar.composedesktoptemplate.classes.StatusInfo
 import com.michaelflisar.composedesktoptemplate.classes.AppTheme
+import com.michaelflisar.composedesktoptemplate.ui.todo.MyHorizontalDivider
 import com.michaelflisar.composedesktoptemplate.ui.todo.MyVerticalDivider
+import org.pushingpixels.aurora.theming.DecorationAreaType
+import org.pushingpixels.aurora.theming.auroraBackground
+import org.pushingpixels.aurora.theming.decoration.AuroraDecorationArea
 
 @Composable
 internal fun StatusBar(
@@ -39,27 +43,40 @@ internal fun StatusBar(
     val mod = Modifier.padding(horizontal = AppTheme.CONTENT_PADDING_SMALL, vertical = 2.dp)
     val style = MaterialTheme.typography.body2
 
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(MaterialTheme.colors.onBackground)
-            .height(IntrinsicSize.Min)
-        ,
-        //horizontalArrangement = Arrangement.spacedBy(MyAppTheme.ITEM_SPACING_MINI),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        CompositionLocalProvider(LocalContentColor provides MaterialTheme.colors.background) {
-            if (infoState.isNotEmpty()) {
-                Text(modifier = mod, text = infoState, style = style)
-            }
-            if (running) {
-                LinearProgressIndicator(modifier = Modifier.width(128.dp).padding(horizontal = AppTheme.ITEM_SPACING))
-            }
-            footer?.invoke(Modifier.weight(1f)) ?: Spacer(modifier = Modifier.weight(1f))
-            MyVerticalDivider(color = MaterialTheme.colors.background)
-            Text(modifier = mod, text = "Infos: $infos", style = style, fontWeight = FontWeight.Bold)
-            MyVerticalDivider(color = MaterialTheme.colors.background)
-            Text(modifier = mod, text = "Errors: $errors", style = style, fontWeight = FontWeight.Bold, color = if (errors > 0) MaterialTheme.colors.error else Color.Unspecified)
-        }
+    //AuroraDecorationArea(decorationAreaType = DecorationAreaType.Footer) {
+       Column {
+           MyHorizontalDivider(color = LocalContentColor.current)
+           Row(
+               modifier = Modifier
+                   .fillMaxWidth()
+                   //.auroraBackground()
+                   .background(MaterialTheme.colors.onBackground)
+                   .height(IntrinsicSize.Min),
+               //horizontalArrangement = Arrangement.spacedBy(MyAppTheme.ITEM_SPACING_MINI),
+               verticalAlignment = Alignment.CenterVertically
+           ) {
+               CompositionLocalProvider(LocalContentColor provides MaterialTheme.colors.background) {
+               if (infoState.isNotEmpty()) {
+                   Text(modifier = mod, text = infoState, style = style)
+               }
+               if (running) {
+                   LinearProgressIndicator(
+                       modifier = Modifier.width(128.dp).padding(horizontal = AppTheme.ITEM_SPACING)
+                   )
+               }
+               footer?.invoke(Modifier.weight(1f)) ?: Spacer(modifier = Modifier.weight(1f))
+               MyVerticalDivider(color = LocalContentColor.current)
+               Text(modifier = mod, text = "Infos: $infos", style = style, fontWeight = FontWeight.Bold)
+               MyVerticalDivider(color = LocalContentColor.current)
+               Text(
+                   modifier = mod,
+                   text = "Errors: $errors",
+                   style = style,
+                   fontWeight = FontWeight.Bold,
+                   color = if (errors > 0) MaterialTheme.colors.error else Color.Unspecified
+               )
+               }
+           }
+      // }
     }
 }

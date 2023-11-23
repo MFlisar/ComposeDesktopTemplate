@@ -3,10 +3,7 @@ package com.michaelflisar.composedesktoptemplate.demo
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.Button
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.snapshotFlow
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import com.michaelflisar.composedesktoptemplate.DesktopApplication
@@ -22,6 +19,7 @@ import kotlinx.coroutines.launch
 import org.pushingpixels.aurora.component.model.Command
 import org.pushingpixels.aurora.component.model.CommandGroup
 import org.pushingpixels.aurora.component.model.CommandMenuContentModel
+import org.pushingpixels.aurora.theming.getAuroraSkins
 import java.io.File
 import java.nio.file.Paths
 import kotlin.io.path.absolutePathString
@@ -42,8 +40,12 @@ fun main() {
             }
         }
 
+        val skinName = Settings.SKIN.getState(appState)
+        val skin = rememberTheme(skinName.value)
+
         DesktopWindow(
             "Demo App",
+            skin = skin.value,
             leftPanel = { ContentLeft(it) },
             rightPanel = { ContentRight(it) },
             centerPanel = { ContentCenter(it) },
@@ -163,7 +165,18 @@ private fun buildMenu(): CommandGroup {
                 text = "Edit",
                 action = {
                     L.d(appState, "Menu => Edit")
-                })
+                }
+            ),
+            Command(
+                text = "Theme",
+                secondaryContentModel = CommandMenuContentModel(
+                    CommandGroup(
+                        commands = MenuThemeSwitcher.getCommands {
+                            Settings.SKIN.getState(appState).value = it.displayName
+                        }
+                    )
+                )
+            )
         )
     )
     return commandGroup

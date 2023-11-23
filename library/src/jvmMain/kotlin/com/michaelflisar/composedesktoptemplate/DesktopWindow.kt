@@ -11,6 +11,7 @@ import com.michaelflisar.composedesktoptemplate.internal.rememberWindowState
 import com.michaelflisar.composedesktoptemplate.ui.MainScreen
 import kotlinx.coroutines.launch
 import org.pushingpixels.aurora.component.model.CommandGroup
+import org.pushingpixels.aurora.theming.AuroraSkinDefinition
 import org.pushingpixels.aurora.theming.businessBlackSteelSkin
 import org.pushingpixels.aurora.window.AuroraApplicationScope
 import org.pushingpixels.aurora.window.AuroraWindow
@@ -19,6 +20,7 @@ import org.pushingpixels.aurora.window.AuroraWindowTitlePaneConfigurations
 @Composable
 fun AuroraApplicationScope.DesktopWindow(
     appName: String,
+    skin: AuroraSkinDefinition = businessBlackSteelSkin(),
     icon: Painter? = null,
     alwaysOnTop: Boolean = false,
     centerPanel: @Composable (modifier: Modifier) -> Unit,
@@ -35,7 +37,7 @@ fun AuroraApplicationScope.DesktopWindow(
     val windowState = rememberWindowState(scope, appState)
     val close = remember { mutableStateOf(false) }
     AuroraWindow(
-        skin = businessBlackSteelSkin(),
+        skin = skin,
         windowTitlePaneConfiguration = AuroraWindowTitlePaneConfigurations.AuroraPlain(),
         state = windowState,
         onCloseRequest = {
