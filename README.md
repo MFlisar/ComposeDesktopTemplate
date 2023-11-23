@@ -1,4 +1,4 @@
 # About
 
-[![Release](https://jitpack.io/v/ComposeDesktopTemplate.svg)](https://jitpack.io/#ComposeDesktopTemplate)
-![License](https://img.shields.io/github/license/ComposeDesktopTemplate)
+[![Release](https://jitpack.io/v/MFlisar/ComposeDesktopTemplate.svg)](https://jitpack.io/#ComposeDesktopTemplate)
+![License](https://img.shields.io/github/license/MFlisar/ComposeDesktopTemplate)
