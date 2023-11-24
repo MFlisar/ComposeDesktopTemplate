@@ -9,6 +9,7 @@ import com.michaelflisar.composedesktoptemplate.DesktopApplication
 import com.michaelflisar.composedesktoptemplate.DesktopMainScreen
 import com.michaelflisar.composedesktoptemplate.classes.LocalAppState
 import com.michaelflisar.composedesktoptemplate.classes.Status
+import com.michaelflisar.composedesktoptemplate.classes.rememberAppState
 import com.michaelflisar.composedesktoptemplate.ui.*
 import com.michaelflisar.composedesktoptemplate.utils.L
 import kotlinx.coroutines.Dispatchers
@@ -17,44 +18,47 @@ import kotlinx.coroutines.launch
 import org.pushingpixels.aurora.component.model.Command
 import org.pushingpixels.aurora.component.model.CommandGroup
 import org.pushingpixels.aurora.component.model.CommandMenuContentModel
+import org.pushingpixels.aurora.window.auroraApplication
 import java.io.File
 import java.nio.file.Paths
 import kotlin.io.path.absolutePathString
 
 fun main() {
-    val path = File(Paths.get("").absolutePathString(), "settings.dat")
-    DesktopApplication(
-        appName = "Demo App",
-        settings = path,
-        menuCommands = { buildMenu() },
-        //icon = painterResource("logo.png"),
-        //alwaysOnTop = alwaysOnTop.value,
-        //onClosed = {
-        //    val job = NamedPipe.stopAll(scope, null)
-        //    job.join()
-        //}
-    ) {
-        // init
-        val appState = LocalAppState.current
-        val autoOpenLogView = Settings.AUTO_OPEN_LOG_PAGE_ON_NEW_LOG_ERROR.getState(appState)
-        val expandedRightPane = Settings.EXPANDED_RIGHT_PANE.getState(appState)
-        LaunchedEffect(autoOpenLogView.value, appState.countLogErrors.value) {
-            if (autoOpenLogView.value) {
-                if (!expandedRightPane.value)
-                    expandedRightPane.value = true
-            }
-        }
-
-        // UI
-        DesktopMainScreen(
-            leftPanel = { ContentLeft(it) },
-            rightPanel = { ContentRight(it) },
-            centerPanel = { ContentCenter(it) },
-            //footer = {
-            //    MainFooter(it, pipeState, filteredData, data, user)
+    auroraApplication {
+        val appState = rememberAppState()
+        DesktopApplication(
+            appName = "Demo App",
+            appState = appState,
+            menuCommands = { buildMenu() },
+            //icon = painterResource("logo.png"),
+            //alwaysOnTop = alwaysOnTop.value,
+            //onClosed = {
+            //    val job = NamedPipe.stopAll(scope, null)
+            //    job.join()
             //}
-        )
+        ) {
+            // init
+            val autoOpenLogView = Settings.AUTO_OPEN_LOG_PAGE_ON_NEW_LOG_ERROR.getState(appState)
+            val expandedRightPane = Settings.EXPANDED_RIGHT_PANE.getState(appState)
+            LaunchedEffect(autoOpenLogView.value, appState.countLogErrors.value) {
+                if (autoOpenLogView.value) {
+                    if (!expandedRightPane.value)
+                        expandedRightPane.value = true
+                }
+            }
+
+            // UI
+            DesktopMainScreen(
+                leftPanel = { ContentLeft(it) },
+                rightPanel = { ContentRight(it) },
+                centerPanel = { ContentCenter(it) },
+                //footer = {
+                //    MainFooter(it, pipeState, filteredData, data, user)
+                //}
+            )
+        }
     }
+
 }
 
 @Composable

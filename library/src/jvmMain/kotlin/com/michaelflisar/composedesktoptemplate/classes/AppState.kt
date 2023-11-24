@@ -13,12 +13,14 @@ import kotlinx.coroutines.launch
 import org.jetbrains.skiko.MainUIDispatcher
 import org.pushingpixels.aurora.window.AuroraApplicationScope
 import java.io.File
+import java.nio.file.Paths
+import kotlin.io.path.absolutePathString
 
 val LocalAppState = compositionLocalOf<AppState> { error("No value provided") }
 
 @Composable
 fun rememberAppState(
-    settingsFile: File
+    settingsFile: File = File(Paths.get("").absolutePathString(), "settings.dat")
 ): AppState {
     val scope = rememberCoroutineScope()
     val settings = remember(settingsFile) { mutableStateOf(Settings.read(settingsFile)) }
