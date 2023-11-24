@@ -8,7 +8,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -17,13 +16,9 @@ import androidx.compose.ui.unit.dp
 import com.michaelflisar.composedesktoptemplate.internal.InfoType
 import com.michaelflisar.composedesktoptemplate.classes.LocalAppState
 import com.michaelflisar.composedesktoptemplate.classes.Status
-import com.michaelflisar.composedesktoptemplate.classes.StatusInfo
 import com.michaelflisar.composedesktoptemplate.classes.AppTheme
 import com.michaelflisar.composedesktoptemplate.ui.todo.MyHorizontalDivider
 import com.michaelflisar.composedesktoptemplate.ui.todo.MyVerticalDivider
-import org.pushingpixels.aurora.theming.DecorationAreaType
-import org.pushingpixels.aurora.theming.auroraBackground
-import org.pushingpixels.aurora.theming.decoration.AuroraDecorationArea
 
 @Composable
 internal fun StatusBar(

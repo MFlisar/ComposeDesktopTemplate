@@ -11,6 +11,7 @@ import com.michaelflisar.composedesktoptemplate.settings.Settings
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.jetbrains.skiko.MainUIDispatcher
+import org.pushingpixels.aurora.window.AuroraApplicationScope
 import java.io.File
 
 val LocalAppState = compositionLocalOf<AppState> { error("No value provided") }
@@ -27,7 +28,8 @@ fun rememberAppState(
     val countLogs = remember { derivedStateOf { logs.size } }
     val countLogErrors = remember { derivedStateOf { logs.count { it.type == InfoType.Error } } }
     val scaffoldState = rememberScaffoldState()
-    return AppState(scope, settings, state, logs, customStatusInfos, countLogs, countLogErrors, scaffoldState)
+    val close = remember { mutableStateOf(false) }
+    return AppState(scope, settings, state, logs, customStatusInfos, countLogs, countLogErrors, scaffoldState, close)
 }
 
 @Immutable
@@ -39,7 +41,8 @@ data class AppState internal constructor(
     val customStatusInfos: MutableState<List<StatusInfo>>,
     val countLogs: State<Int>,
     val countLogErrors: State<Int>,
-    val scaffoldState: ScaffoldState
+    val scaffoldState: ScaffoldState,
+    val close: MutableState<Boolean>
 ) {
     fun setState(status: Status) {
         state.value = status

@@ -21,7 +21,6 @@ import androidx.compose.ui.unit.dp
 import com.michaelflisar.composedesktoptemplate.classes.AppTheme
 import com.michaelflisar.composedesktoptemplate.classes.LocalAppState
 import com.michaelflisar.composedesktoptemplate.internal.LogLine
-import com.michaelflisar.composedesktoptemplate.settings.Settings
 import com.michaelflisar.composedesktoptemplate.settings.UISetting
 import com.michaelflisar.composedesktoptemplate.ui.todo.MyCheckbox
 import com.michaelflisar.composedesktoptemplate.ui.todo.MyScrollableLazyColumn

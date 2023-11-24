@@ -5,21 +5,18 @@ import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import com.michaelflisar.composedesktoptemplate.DesktopApplication
-import com.michaelflisar.composedesktoptemplate.DesktopWindow
+import com.michaelflisar.composedesktoptemplate.DesktopMainScreen
 import com.michaelflisar.composedesktoptemplate.classes.LocalAppState
 import com.michaelflisar.composedesktoptemplate.classes.Status
 import com.michaelflisar.composedesktoptemplate.ui.*
 import com.michaelflisar.composedesktoptemplate.utils.L
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.pushingpixels.aurora.component.model.Command
 import org.pushingpixels.aurora.component.model.CommandGroup
 import org.pushingpixels.aurora.component.model.CommandMenuContentModel
-import org.pushingpixels.aurora.theming.getAuroraSkins
 import java.io.File
 import java.nio.file.Paths
 import kotlin.io.path.absolutePathString
@@ -27,7 +24,15 @@ import kotlin.io.path.absolutePathString
 fun main() {
     val path = File(Paths.get("").absolutePathString(), "settings.dat")
     DesktopApplication(
-        settings = path
+        appName = "Demo App",
+        settings = path,
+        menuCommands = { buildMenu() },
+        //icon = painterResource("logo.png"),
+        //alwaysOnTop = alwaysOnTop.value,
+        //onClosed = {
+        //    val job = NamedPipe.stopAll(scope, null)
+        //    job.join()
+        //}
     ) {
         // init
         val appState = LocalAppState.current
@@ -40,22 +45,11 @@ fun main() {
             }
         }
 
-        val skinName = Settings.SKIN.getState(appState)
-        val skin = rememberTheme(skinName.value)
-
-        DesktopWindow(
-            "Demo App",
-            skin = skin.value,
+        // UI
+        DesktopMainScreen(
             leftPanel = { ContentLeft(it) },
             rightPanel = { ContentRight(it) },
             centerPanel = { ContentCenter(it) },
-            menuCommands = { buildMenu() }
-            //icon = painterResource("logo.png"),
-            //alwaysOnTop = alwaysOnTop.value,
-            //onClosed = {
-            //    val job = NamedPipe.stopAll(scope, null)
-            //    job.join()
-            //},
             //footer = {
             //    MainFooter(it, pipeState, filteredData, data, user)
             //}
@@ -166,16 +160,6 @@ private fun buildMenu(): CommandGroup {
                 action = {
                     L.d(appState, "Menu => Edit")
                 }
-            ),
-            Command(
-                text = "Theme",
-                secondaryContentModel = CommandMenuContentModel(
-                    CommandGroup(
-                        commands = MenuThemeSwitcher.getCommands {
-                            Settings.SKIN.getState(appState).value = it.displayName
-                        }
-                    )
-                )
             )
         )
     )

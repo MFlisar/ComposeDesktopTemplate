@@ -1,19 +1,15 @@
-package com.michaelflisar.composedesktoptemplate.ui
+package com.michaelflisar.composedesktoptemplate
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
-import androidx.compose.material.primarySurface
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.michaelflisar.composedesktoptemplate.classes.LocalAppState
-import com.michaelflisar.composedesktoptemplate.classes.rememberAppState
 import com.michaelflisar.composedesktoptemplate.ui.internal.StatusBar
 import com.michaelflisar.composedesktoptemplate.ui.todo.MyVerticalDivider
 import org.pushingpixels.aurora.theming.auroraBackground
-import org.pushingpixels.aurora.window.AuroraApplicationScope
 
 // ---------------------
 // Main Layout
@@ -21,15 +17,13 @@ import org.pushingpixels.aurora.window.AuroraApplicationScope
 
 @Composable
 @Preview
-internal fun MainScreen(
-    applicationScope: AuroraApplicationScope,
-    close: Boolean,
+fun DesktopMainScreen(
     leftPanel: (@Composable (modifier: Modifier) -> Unit)? = null,
     rightPanel: (@Composable (modifier: Modifier) -> Unit)? = null,
     footer: (@Composable (modifier: Modifier) -> Unit)? = null,
     centerPanel: @Composable (modifier: Modifier) -> Unit,
-    maxWidthLeftInPercentages: Float,
-    maxWidthRightInPercentages: Float
+    maxWidthLeftInPercentages: Float = 1f/5f,
+    maxWidthRightInPercentages: Float = 1f/5f
 ) {
     val appState = LocalAppState.current
     MaterialTheme {
@@ -57,13 +51,6 @@ internal fun MainScreen(
                 }
             }
             StatusBar(footer)
-        }
-
-        // Close Action
-        if (close) {
-            val appState = LocalAppState.current
-            appState.settings.value.write()
-            applicationScope.exitApplication()
         }
     }
 }
