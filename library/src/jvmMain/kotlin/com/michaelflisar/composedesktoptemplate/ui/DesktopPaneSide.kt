@@ -12,9 +12,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.zIndex
 import com.michaelflisar.composedesktoptemplate.classes.LocalAppState
 import com.michaelflisar.composedesktoptemplate.settings.UISetting
 import com.michaelflisar.composedesktoptemplate.classes.AppTheme
+import com.michaelflisar.composedesktoptemplate.ui.todo.MyVerticalDivider
 import org.pushingpixels.aurora.theming.LocalSkinColors
 import org.pushingpixels.aurora.theming.LocalTextColor
 import org.pushingpixels.aurora.theming.colorscheme.AuroraColorScheme
@@ -29,48 +31,58 @@ fun DesktopPaneSide(
     side: PaneSide,
     label: String,
     expanded: UISetting.Bool,
+    divider: Boolean = true,
     content: (@Composable ColumnScope.() -> Unit)
 ) {
     val appState = LocalAppState.current
-    Column(
-        modifier = modifier,
-        horizontalAlignment = if (side == PaneSide.Left) Alignment.Start else Alignment.End
-    ) {
-        // Header (Icon + Title)
-        Row(
-            modifier = Modifier,
-            verticalAlignment = Alignment.CenterVertically
+    Row(modifier = modifier) {
+        if (side == PaneSide.Right && divider) {
+            MyVerticalDivider()
+        }
+        Column(
+            modifier = Modifier.fillMaxHeight() .weight(1f, fill = false),
+            horizontalAlignment = if (side == PaneSide.Left) Alignment.Start else Alignment.End
         ) {
-            if (side == PaneSide.Left) {
-                ExpandIcon(expanded)
-                Title(label, expanded)
-                Spacer(Modifier.width(AppTheme.CONTENT_PADDING_SMALL))
-            } else {
-                Spacer(Modifier.width(AppTheme.CONTENT_PADDING_SMALL))
-                Title(label, expanded)
-                ExpandIcon(expanded)
+            // Header (Icon + Title)
+            Row(
+                modifier = Modifier,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                if (side == PaneSide.Left) {
+                    ExpandIcon(expanded)
+                    Title(label, expanded)
+                    Spacer(Modifier.width(AppTheme.CONTENT_PADDING_SMALL))
+                } else {
+                    Spacer(Modifier.width(AppTheme.CONTENT_PADDING_SMALL))
+                    Title(label, expanded)
+                    ExpandIcon(expanded)
+                }
+            }
+            // Content
+            AnimatedVisibility(
+                modifier = Modifier,
+                visible = expanded.getState(appState).value,
+                enter = fadeIn() + expandHorizontally(
+                    expandFrom = if (side == PaneSide.Left) Alignment.End else Alignment.Start
+                ),
+                exit = fadeOut() + shrinkHorizontally(
+                    shrinkTowards = if (side == PaneSide.Left) Alignment.End else Alignment.Start
+                ),
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(AppTheme.CONTENT_PADDING_SMALL)
+                    //.verticalScroll(rememberScrollState())
+                    ,
+                    verticalArrangement = Arrangement.spacedBy(AppTheme.ITEM_SPACING)
+                ) {
+                    content()
+                }
             }
         }
-        // Content
-        AnimatedVisibility(
-            visible = expanded.getState(appState).value,
-            enter = fadeIn() + expandHorizontally(
-                expandFrom = if (side == PaneSide.Left) Alignment.End else Alignment.Start
-            ),
-            exit = fadeOut() + shrinkHorizontally(
-                shrinkTowards = if (side == PaneSide.Left) Alignment.End else Alignment.Start
-            ),
-        ) {
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(AppTheme.CONTENT_PADDING_SMALL)
-                    //.verticalScroll(rememberScrollState())
-                ,
-                verticalArrangement = Arrangement.spacedBy(AppTheme.ITEM_SPACING)
-            ) {
-                content()
-            }
+        if (side == PaneSide.Left && divider) {
+            MyVerticalDivider()
         }
     }
 }

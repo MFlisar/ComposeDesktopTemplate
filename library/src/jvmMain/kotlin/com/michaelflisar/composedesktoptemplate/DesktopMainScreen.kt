@@ -7,7 +7,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.michaelflisar.composedesktoptemplate.classes.LocalAppState
 import com.michaelflisar.composedesktoptemplate.ui.internal.StatusBar
-import com.michaelflisar.composedesktoptemplate.ui.todo.MyVerticalDivider
 import org.pushingpixels.aurora.theming.auroraBackground
 
 // ---------------------
@@ -35,14 +34,12 @@ fun DesktopMainScreen(
             ) {
                 val maxWidthLeft = maxWidth * maxWidthLeftInPercentages
                 val maxWidthRight = maxWidth * maxWidthRightInPercentages
-                Row(modifier = Modifier.fillMaxHeight()) {
+                Row(modifier = Modifier.fillMaxSize()) {
                     if (leftPanel != null) {
                         leftPanel(Modifier.sizeIn(maxWidth = maxWidthLeft))
-                        MyVerticalDivider()
                     }
                     centerPanel(Modifier.weight(1f).fillMaxHeight())
                     if (rightPanel != null) {
-                        MyVerticalDivider()
                         rightPanel(Modifier.sizeIn(maxWidth = maxWidthRight).fillMaxHeight())
                     }
                 }
