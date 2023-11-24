@@ -69,7 +69,7 @@ fun DesktopLogs(
             IconButton(
                 enabled = appState.logs.isNotEmpty(),
                 onClick = {
-                    appState.logs.clear()
+                    appState.clearLogs()
                     appState.showSnackbar(scope, "Logs cleared!")
                 }
             ) {

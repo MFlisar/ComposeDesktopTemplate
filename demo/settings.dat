@@ -1,7 +1,7 @@
 Integer;window_width;1410
 Integer;window_height;747
-Integer;window_x;212
-Integer;window_y;136
+Integer;window_x;278
+Integer;window_y;200
 Integer;window_placement;0
 Bool;ExpandedLeftPane;false
 Bool;ExpandedRightPane;true

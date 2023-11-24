@@ -7,7 +7,7 @@ import java.util.regex.Pattern
 
 object L {
 
-    private val ADVANCED_LOGGING = false
+    var ADVANCED_LOGGING = false
 
     private val ANONYMOUS_CLASS = Pattern.compile("(\\$\\d+)+$")
 
@@ -70,7 +70,7 @@ object L {
     ) {
         val caller = getCaller(5)
         val info = LogLine(caller, info, type = type, exception = exception)
-        appState.logs.add(info)
+        appState.addLog(info)
         println(info.getConsoleLog())
     }
 
