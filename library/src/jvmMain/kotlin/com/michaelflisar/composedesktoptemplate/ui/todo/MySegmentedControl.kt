@@ -56,7 +56,7 @@ fun MySegmentedControl(
     items: List<String>,
     selected: MutableState<Int>,
     color: Color = Color.Unspecified,
-    onSelectionChanged: ((Int?) -> Unit)? = null
+    onSelectionChanged: ((Int) -> Unit)? = null
 ) {
     val selectedIndex = selected.value
     MySegmentedControlImpl(modifier, items, selectedIndex, color) { index, item ->
@@ -71,7 +71,7 @@ fun MySegmentedControl(
     items: List<String>,
     selected: Int,
     color: Color = Color.Unspecified,
-    onSelectionChanged: ((Int?) -> Unit)? = null
+    onSelectionChanged: ((Int) -> Unit)? = null
 ) {
     MySegmentedControlImpl(modifier, items, selected, color) { index, item ->
         onSelectionChanged?.invoke(index)
