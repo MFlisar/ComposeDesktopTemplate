@@ -65,26 +65,26 @@ internal fun StatusBar(
                     color = if (errors > 0) MaterialTheme.colors.error else Color.Unspecified
                 )
             }
-            AnimatedVisibility(running != null)  {
-                    MyHorizontalDivider(color = LocalContentColor.current)
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(IntrinsicSize.Min),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        if (running?.showProgress == true) {
-                            LinearProgressIndicator(
-                                modifier = Modifier.width(128.dp).padding(horizontal = AppTheme.ITEM_SPACING)
-                            )
-                        }
-                        Text(
-                            modifier = mod.weight(1f),
-                            text = running?.label ?: "",
-                            style = style,
-                            maxLines = if (running?.singleLine == true) 1 else Int.MAX_VALUE
+            AnimatedVisibility(running != null) {
+                MyHorizontalDivider(color = LocalContentColor.current)
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(IntrinsicSize.Min),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    if (running?.showProgress == true) {
+                        LinearProgressIndicator(
+                            modifier = Modifier.width(128.dp).padding(horizontal = AppTheme.ITEM_SPACING)
                         )
                     }
+                    Text(
+                        modifier = mod.weight(1f),
+                        text = running?.label ?: "",
+                        style = style,
+                        maxLines = if (running?.singleLine == true) 1 else Int.MAX_VALUE
+                    )
+                }
             }
         }
     }
