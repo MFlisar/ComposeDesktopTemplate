@@ -11,7 +11,6 @@ import com.michaelflisar.composedesktoptemplate.settings.Settings
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.jetbrains.skiko.MainUIDispatcher
-import org.pushingpixels.aurora.window.AuroraApplicationScope
 import java.io.File
 import java.nio.file.Paths
 import kotlin.io.path.absolutePathString
@@ -47,7 +46,9 @@ data class AppState internal constructor(
     val close: MutableState<Boolean>
 ) {
     fun setState(status: Status) {
-        state.value = status
+        scope.launch(MainUIDispatcher) {
+            state.value = status
+        }
     }
 
     fun showSnackbar(
@@ -56,7 +57,7 @@ data class AppState internal constructor(
         actionLabel: String? = null,
         duration: SnackbarDuration = SnackbarDuration.Short
     ) {
-        scope.launch {
+        scope.launch(MainUIDispatcher) {
             scaffoldState.snackbarHostState.showSnackbar(info, actionLabel, duration)
         }
     }

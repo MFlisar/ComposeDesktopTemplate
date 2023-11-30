@@ -1,5 +1,6 @@
 package com.michaelflisar.composedesktoptemplate.ui.internal
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.LinearProgressIndicator
@@ -13,10 +14,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.michaelflisar.composedesktoptemplate.internal.InfoType
+import com.michaelflisar.composedesktoptemplate.classes.AppTheme
 import com.michaelflisar.composedesktoptemplate.classes.LocalAppState
 import com.michaelflisar.composedesktoptemplate.classes.Status
-import com.michaelflisar.composedesktoptemplate.classes.AppTheme
+import com.michaelflisar.composedesktoptemplate.internal.InfoType
 import com.michaelflisar.composedesktoptemplate.ui.todo.MyHorizontalDivider
 import com.michaelflisar.composedesktoptemplate.ui.todo.MyVerticalDivider
 
@@ -30,48 +31,61 @@ internal fun StatusBar(
     val infos = appState.logs.count { it.type != InfoType.Error }
     val errors = appState.logs.count { it.type == InfoType.Error }
 
-    val (infoState, running) = when (state) {
-        Status.None -> Pair("", false)
-        is Status.Running -> Pair(state.label, true)
+    val running = when (state) {
+        Status.None -> null
+        is Status.Running -> state
     }
 
     val mod = Modifier.padding(horizontal = AppTheme.CONTENT_PADDING_SMALL, vertical = 2.dp)
     val style = MaterialTheme.typography.body2
 
     //AuroraDecorationArea(decorationAreaType = DecorationAreaType.Footer) {
-       Column {
-           MyHorizontalDivider(color = LocalContentColor.current)
-           Row(
-               modifier = Modifier
-                   .fillMaxWidth()
-                   //.auroraBackground()
-                   .background(MaterialTheme.colors.onBackground)
-                   .height(IntrinsicSize.Min),
-               //horizontalArrangement = Arrangement.spacedBy(MyAppTheme.ITEM_SPACING_MINI),
-               verticalAlignment = Alignment.CenterVertically
-           ) {
-               CompositionLocalProvider(LocalContentColor provides MaterialTheme.colors.background) {
-               if (infoState.isNotEmpty()) {
-                   Text(modifier = mod, text = infoState, style = style)
-               }
-               if (running) {
-                   LinearProgressIndicator(
-                       modifier = Modifier.width(128.dp).padding(horizontal = AppTheme.ITEM_SPACING)
-                   )
-               }
-               footer?.invoke(Modifier.weight(1f)) ?: Spacer(modifier = Modifier.weight(1f))
-               MyVerticalDivider(color = LocalContentColor.current)
-               Text(modifier = mod, text = "Infos: $infos", style = style, fontWeight = FontWeight.Bold)
-               MyVerticalDivider(color = LocalContentColor.current)
-               Text(
-                   modifier = mod,
-                   text = "Errors: $errors",
-                   style = style,
-                   fontWeight = FontWeight.Bold,
-                   color = if (errors > 0) MaterialTheme.colors.error else Color.Unspecified
-               )
-               }
-           }
-      // }
+    CompositionLocalProvider(LocalContentColor provides MaterialTheme.colors.background) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colors.onBackground)
+        ) {
+            MyHorizontalDivider(color = LocalContentColor.current)
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(IntrinsicSize.Min),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                footer?.invoke(Modifier.weight(1f)) ?: Spacer(modifier = Modifier.weight(1f))
+                MyVerticalDivider(color = LocalContentColor.current)
+                Text(modifier = mod, text = "Infos: $infos", style = style, fontWeight = FontWeight.Bold)
+                MyVerticalDivider(color = LocalContentColor.current)
+                Text(
+                    modifier = mod,
+                    text = "Errors: $errors",
+                    style = style,
+                    fontWeight = FontWeight.Bold,
+                    color = if (errors > 0) MaterialTheme.colors.error else Color.Unspecified
+                )
+            }
+            AnimatedVisibility(running != null)  {
+                    MyHorizontalDivider(color = LocalContentColor.current)
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(IntrinsicSize.Min),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        if (running?.showProgress == true) {
+                            LinearProgressIndicator(
+                                modifier = Modifier.width(128.dp).padding(horizontal = AppTheme.ITEM_SPACING)
+                            )
+                        }
+                        Text(
+                            modifier = mod.weight(1f),
+                            text = running?.label ?: "",
+                            style = style,
+                            maxLines = if (running?.singleLine == true) 1 else Int.MAX_VALUE
+                        )
+                    }
+            }
+        }
     }
 }
