@@ -130,12 +130,10 @@ private fun ContentCenter(modifier: Modifier) {
             }
             val selectedTab = remember { mutableStateOf(0) }
             VerticalTabs(
-                verticalTabStyle = VerticalTabStyle(
-                    markerStyle = VerticalTabStyle.Style.Highlight(
-                        side = VerticalTabStyle.Side.Left,
-                        backgroundColor = MaterialTheme.colors.primary,
-                        contentColor = MaterialTheme.colors.onPrimary
-                    )
+                verticalTabStyle = VerticalTabStyle.Highlight(
+                    side = VerticalTabStyle.Side.Left,
+                    backgroundColor = MaterialTheme.colors.primary,
+                    contentColor = MaterialTheme.colors.onPrimary
                 )
             ) {
                 VerticalTabItem("Tab 1", 0, selectedTab)

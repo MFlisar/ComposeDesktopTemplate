@@ -16,31 +16,25 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
-val LocalVerticalTabStyle = compositionLocalOf { VerticalTabStyle() }
+private val LocalVerticalTabStyle = compositionLocalOf<VerticalTabStyle> { VerticalTabStyle.Stripe() }
 
-class VerticalTabStyle(
-    val marker: Boolean = true,
-    val markerStyle: Style = Style.Stripe()
-) {
+sealed class VerticalTabStyle {
     enum class Side {
         Left,
         Right
     }
 
-    sealed class Style {
-        data object None : Style()
-        class Stripe(val side: Side = Side.Left, val width: Dp = 16.dp) : Style() {
+    data object None : VerticalTabStyle()
+    class Stripe(val side: Side = Side.Left, val width: Dp = 16.dp) : VerticalTabStyle()
 
-        }
-
-        class Highlight(val side: Side = Side.Left, val backgroundColor: Color, val contentColor: Color) : Style()
-    }
+    class Highlight(val side: Side = Side.Left, val backgroundColor: Color, val contentColor: Color) :
+        VerticalTabStyle()
 }
 
 @Composable
 fun VerticalTabs(
     modifier: Modifier = Modifier,
-    verticalTabStyle: VerticalTabStyle = VerticalTabStyle(),
+    verticalTabStyle: VerticalTabStyle = VerticalTabStyle.Stripe(),
     content: @Composable () -> Unit
 ) {
     CompositionLocalProvider(
@@ -90,10 +84,9 @@ private fun Marker(
     side: VerticalTabStyle.Side,
     selected: State<Boolean>
 ) {
-    val markerStyle = style.markerStyle
-    if (markerStyle !is VerticalTabStyle.Style.Stripe)
+    if (style !is VerticalTabStyle.Stripe)
         return
-    if (markerStyle.side != side)
+    if (style.side != side)
         return
     val indicatorWidth by animateDpAsState(if (selected.value) 8.dp else 0.dp)
     Box(modifier = Modifier.width(indicatorWidth).fillMaxHeight().background(MaterialTheme.colors.primary))
@@ -107,10 +100,9 @@ private fun RowScope.TabButton(
     tabIndex: Int,
     selectedTab: MutableState<Int>
 ) {
-    val markerStyle = style.markerStyle
-    when (markerStyle) {
-        VerticalTabStyle.Style.None,
-        is VerticalTabStyle.Style.Stripe -> {
+    when (style) {
+        VerticalTabStyle.None,
+        is VerticalTabStyle.Stripe -> {
             OutlinedButton(
                 modifier = Modifier.fillMaxHeight().weight(1f),
                 onClick = {
@@ -126,7 +118,7 @@ private fun RowScope.TabButton(
             }
         }
 
-        is VerticalTabStyle.Style.Highlight -> {
+        is VerticalTabStyle.Highlight -> {
             Box(
                 modifier = Modifier
                     .fillMaxHeight()
@@ -137,7 +129,7 @@ private fun RowScope.TabButton(
                 androidx.compose.animation.AnimatedVisibility(
                     visible = selected.value,
                     modifier = Modifier
-                        .align(if (markerStyle.side == VerticalTabStyle.Side.Left) Alignment.CenterStart else Alignment.CenterEnd),
+                        .align(if (style.side == VerticalTabStyle.Side.Left) Alignment.CenterStart else Alignment.CenterEnd),
                     enter = expandHorizontally(
                         //expandFrom = if (markerStyle.side == VerticalTabStyle.Side.Left) Alignment.Start else Alignment.End
                     ),
@@ -148,12 +140,12 @@ private fun RowScope.TabButton(
                     Spacer(
                         modifier = Modifier
                             .fillMaxSize()
-                            .background(markerStyle.backgroundColor)
+                            .background(style.backgroundColor)
                     )
                 }
                 val contentColor by animateColorAsState(
                     if (selected.value) {
-                        markerStyle.takeIf { selected.value }?.let { it.contentColor } ?: MaterialTheme.colors.primary
+                        style.takeIf { selected.value }?.let { it.contentColor } ?: MaterialTheme.colors.primary
                     } else MaterialTheme.colors.primary
                 )
                 OutlinedButton(
