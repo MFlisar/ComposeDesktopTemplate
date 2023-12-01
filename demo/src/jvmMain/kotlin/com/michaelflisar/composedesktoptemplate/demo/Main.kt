@@ -2,6 +2,7 @@ package com.michaelflisar.composedesktoptemplate.demo
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.Button
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -11,6 +12,9 @@ import com.michaelflisar.composedesktoptemplate.classes.LocalAppState
 import com.michaelflisar.composedesktoptemplate.classes.Status
 import com.michaelflisar.composedesktoptemplate.classes.rememberAppState
 import com.michaelflisar.composedesktoptemplate.ui.*
+import com.michaelflisar.composedesktoptemplate.ui.components.VerticalTabItem
+import com.michaelflisar.composedesktoptemplate.ui.components.VerticalTabStyle
+import com.michaelflisar.composedesktoptemplate.ui.components.VerticalTabs
 import com.michaelflisar.composedesktoptemplate.utils.L
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -19,9 +23,6 @@ import org.pushingpixels.aurora.component.model.Command
 import org.pushingpixels.aurora.component.model.CommandGroup
 import org.pushingpixels.aurora.component.model.CommandMenuContentModel
 import org.pushingpixels.aurora.window.auroraApplication
-import java.io.File
-import java.nio.file.Paths
-import kotlin.io.path.absolutePathString
 
 fun main() {
     auroraApplication {
@@ -126,6 +127,20 @@ private fun ContentCenter(modifier: Modifier) {
                 }
             ) {
                 Text("Test Work for 5 seconds...")
+            }
+            val selectedTab = remember { mutableStateOf(0) }
+            VerticalTabs(
+                verticalTabStyle = VerticalTabStyle(
+                    markerStyle = VerticalTabStyle.Style.Highlight(
+                        side = VerticalTabStyle.Side.Left,
+                        backgroundColor = MaterialTheme.colors.primary,
+                        contentColor = MaterialTheme.colors.onPrimary
+                    )
+                )
+            ) {
+                VerticalTabItem("Tab 1", 0, selectedTab)
+                VerticalTabItem("Tab 2", 1, selectedTab)
+                VerticalTabItem("Tab 3", 2, selectedTab)
             }
         }
     }
