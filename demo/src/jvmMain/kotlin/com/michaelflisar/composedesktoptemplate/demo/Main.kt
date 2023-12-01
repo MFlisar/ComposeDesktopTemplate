@@ -67,7 +67,8 @@ private fun ContentLeft(modifier: Modifier) {
         modifier,
         PaneSide.Left,
         "Settings",
-        Settings.EXPANDED_LEFT_PANE
+        Settings.EXPANDED_LEFT_PANE,
+        //showLabelWhenCollapsed = false
     ) {
         DesktopSettings(
             settings = Settings.ALL
