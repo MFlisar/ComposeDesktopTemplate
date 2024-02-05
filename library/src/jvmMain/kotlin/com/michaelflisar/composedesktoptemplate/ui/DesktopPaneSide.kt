@@ -2,6 +2,7 @@ package com.michaelflisar.composedesktoptemplate.ui
 
 import androidx.compose.animation.*
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -13,11 +14,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ComposeCompilerApi
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.michaelflisar.composedesktoptemplate.classes.LocalAppState
 import com.michaelflisar.composedesktoptemplate.settings.UISetting
@@ -103,7 +106,9 @@ fun DesktopPaneSide(
                         enter = fadeIn(),
                         exit = fadeOut(),
                     ) {
-                        VerticalTitle(side, label)
+                        VerticalTitle(side, label) {
+                            expanded.updateValue(appState, !expanded.getState(appState).value)
+                        }
                     }
                 }
             }
@@ -156,14 +161,20 @@ private fun Title(
 @Composable
 private fun VerticalTitle(
     side: PaneSide,
-    label: String
+    label: String,
+    onClick: () -> Unit
 ){
     Row(
-        //modifier = Modifier.fillMaxHeight(),
+        modifier = Modifier
+
+            .clip(MaterialTheme.shapes.small)
+            .clickable { onClick() }
+        ,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
             modifier = Modifier
+                .padding(8.dp)
                 .vertical()
                 .rotate(if (side == PaneSide.Left) -90f else 90f),
             text = label,

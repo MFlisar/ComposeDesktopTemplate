@@ -4,17 +4,20 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Computer
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import com.michaelflisar.composedesktoptemplate.DesktopApplication
 import com.michaelflisar.composedesktoptemplate.DesktopMainScreen
 import com.michaelflisar.composedesktoptemplate.classes.LocalAppState
 import com.michaelflisar.composedesktoptemplate.classes.Status
 import com.michaelflisar.composedesktoptemplate.classes.rememberAppState
 import com.michaelflisar.composedesktoptemplate.ui.*
-import com.michaelflisar.composedesktoptemplate.ui.components.VerticalTabItem
-import com.michaelflisar.composedesktoptemplate.ui.components.VerticalTabStyle
-import com.michaelflisar.composedesktoptemplate.ui.components.VerticalTabs
+import com.michaelflisar.composedesktoptemplate.ui.components.*
 import com.michaelflisar.composedesktoptemplate.utils.L
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -85,7 +88,7 @@ private fun ContentRight(modifier: Modifier) {
         "Logs",
         Settings.EXPANDED_RIGHT_PANE
     ) {
-        DesktopLogs(Settings.AUTO_SCROLL_LOGS)
+        DesktopLogs(autoScroll = Settings.AUTO_SCROLL_LOGS)
     }
 }
 
@@ -139,6 +142,18 @@ private fun ContentCenter(modifier: Modifier) {
                 VerticalTabItem("Tab 1", 0, selectedTab)
                 VerticalTabItem("Tab 2", 1, selectedTab)
                 VerticalTabItem("Tab 3", 2, selectedTab)
+            }
+            val selectedTab2 = remember { mutableStateOf(0) }
+            VerticalTabs(
+                verticalTabStyle = VerticalTabStyle.Highlight(
+                    side = VerticalTabStyle.Side.Left,
+                    backgroundColor = MaterialTheme.colors.primary,
+                    contentColor = MaterialTheme.colors.onPrimary
+                )
+            ) {
+                VerticalTabIconItem(rememberVectorPainter(Icons.Default.Home), 0, selectedTab2)
+                VerticalTabIconItem(rememberVectorPainter(Icons.Default.Settings), 1, selectedTab2)
+                VerticalTabIconItem(rememberVectorPainter(Icons.Default.Computer), 2, selectedTab2)
             }
         }
     }

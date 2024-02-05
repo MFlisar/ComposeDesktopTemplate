@@ -28,6 +28,7 @@ import com.michaelflisar.composedesktoptemplate.utils.Util
 
 @Composable
 fun DesktopLogs(
+    modifier: Modifier = Modifier,
     autoScroll: UISetting.Bool,
     callerCellWidth: Dp = 128.dp
 ) {
@@ -40,7 +41,7 @@ fun DesktopLogs(
         if (logs.size > 0 && autoScroll.value)
             listState.scrollToItem(logs.size - 1)
     }
-    Column {
+    Column(modifier = modifier) {
         MyScrollableLazyColumn(
             Modifier.fillMaxWidth().weight(1f),
             AppTheme.ITEM_SPACING_MINI,
