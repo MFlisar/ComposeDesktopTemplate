@@ -25,10 +25,11 @@ fun MyCheckbox(
     title: String,
     checked: MutableState<Boolean>,
     color: Color = Color.Unspecified,
+    colorUnselected: Color = Color.Unspecified,
     fontWeight: FontWeight = FontWeight.Normal,
     onCheckedChange: (Boolean) -> Unit = {}
 ) {
-    MyCheckbox(modifier, title, checked.value, color, fontWeight) {
+    MyCheckbox(modifier, title, checked.value, color, colorUnselected, fontWeight) {
         checked.value = it
         onCheckedChange(it)
     }
@@ -40,6 +41,7 @@ fun MyCheckbox(
     title: String,
     checked: Boolean,
     color: Color = Color.Unspecified,
+    colorUnselected: Color = Color.Unspecified,
     fontWeight: FontWeight = FontWeight.Normal,
     onCheckedChange: ((Boolean) -> Unit)? = null
 ) {
@@ -62,8 +64,11 @@ fun MyCheckbox(
         Icon(
             imageVector = if (checked) Icons.Default.CheckBox else Icons.Default.CheckBoxOutlineBlank,
             contentDescription = null,
-            tint = if (checked) (color.takeIf { it != Color.Unspecified }
-                ?: MaterialTheme.colors.secondary) else MaterialTheme.colors.onSurface.copy(alpha = 0.6f)
+            tint = if (checked) { (
+                    color.takeIf { it != Color.Unspecified } ?: MaterialTheme.colors.secondary)
+            }else {
+                colorUnselected.takeIf { it != Color.Unspecified } ?:  MaterialTheme.colors.onSurface.copy(alpha = 0.6f)
+            }
         )
     }
 }

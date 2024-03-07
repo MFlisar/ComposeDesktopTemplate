@@ -137,7 +137,7 @@ private fun MyDropdownImpl(
                 Column(modifier = Modifier.weight(1f)) {
                     if (title.isNotEmpty()) {
                         Text(text = title, style = style1, fontWeight = FontWeight.Bold, color = labelColor)
-                        Spacer(modifier = Modifier.height(4.dp))
+                        //Spacer(modifier = Modifier.height(4.dp))
                     }
                     Text(text = items.getOrElse(selected) { "" }, style = style2, color = color)
                 }

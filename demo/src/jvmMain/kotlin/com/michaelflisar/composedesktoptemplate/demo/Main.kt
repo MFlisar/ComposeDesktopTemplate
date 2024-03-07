@@ -18,6 +18,7 @@ import com.michaelflisar.composedesktoptemplate.classes.Status
 import com.michaelflisar.composedesktoptemplate.classes.rememberAppState
 import com.michaelflisar.composedesktoptemplate.ui.*
 import com.michaelflisar.composedesktoptemplate.ui.components.*
+import com.michaelflisar.composedesktoptemplate.ui.todo.MyDropdown
 import com.michaelflisar.composedesktoptemplate.utils.L
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -155,6 +156,9 @@ private fun ContentCenter(modifier: Modifier) {
                 VerticalTabIconItem(rememberVectorPainter(Icons.Default.Settings), 1, selectedTab2)
                 VerticalTabIconItem(rememberVectorPainter(Icons.Default.Computer), 2, selectedTab2)
             }
+
+            val selectedIndex = remember { mutableStateOf(0) }
+            MyDropdown(title = "List", items = (1..5).map { "Item $it" }, selected = selectedIndex)
         }
     }
 }
