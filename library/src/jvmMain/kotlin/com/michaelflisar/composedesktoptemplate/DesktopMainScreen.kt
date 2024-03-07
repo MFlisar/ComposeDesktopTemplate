@@ -20,6 +20,8 @@ fun DesktopMainScreen(
     rightPanel: (@Composable (modifier: Modifier) -> Unit)? = null,
     footer: (@Composable (modifier: Modifier) -> Unit)? = null,
     centerPanel: @Composable (modifier: Modifier) -> Unit,
+    showInfosInFooter: Boolean = true,
+    showErrorsInFooter: Boolean = true,
     maxWidthLeftInPercentages: Float = 1f / 5f,
     maxWidthRightInPercentages: Float = 1f / 5f
 ) {
@@ -45,7 +47,7 @@ fun DesktopMainScreen(
                 }
             }
         }
-        StatusBar(footer)
+        StatusBar(footer, showInfosInFooter, showErrorsInFooter)
     }
 }
 

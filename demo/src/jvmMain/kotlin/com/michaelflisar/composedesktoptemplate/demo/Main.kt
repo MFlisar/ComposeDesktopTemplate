@@ -31,8 +31,8 @@ fun main() {
     auroraApplication {
         val appState = rememberAppState()
         DesktopApplication(
-            appName = "Demo App",
-            appState = appState,
+            title = "Demo App",
+            state = appState,
             menuCommands = { buildMenu() },
             //icon = painterResource("logo.png"),
             //alwaysOnTop = alwaysOnTop.value,

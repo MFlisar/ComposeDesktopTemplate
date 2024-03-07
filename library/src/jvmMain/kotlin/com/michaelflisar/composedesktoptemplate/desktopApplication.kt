@@ -14,19 +14,24 @@ import com.michaelflisar.composedesktoptemplate.classes.rememberAppState
 import com.michaelflisar.composedesktoptemplate.internal.rememberWindowState
 import kotlinx.coroutines.launch
 import org.pushingpixels.aurora.component.model.CommandGroup
+import org.pushingpixels.aurora.theming.IconFilterStrategy
 import org.pushingpixels.aurora.theming.businessBlackSteelSkin
-import org.pushingpixels.aurora.window.AuroraApplicationScope
-import org.pushingpixels.aurora.window.AuroraWindow
-import org.pushingpixels.aurora.window.AuroraWindowScope
-import org.pushingpixels.aurora.window.AuroraWindowTitlePaneConfigurations
+import org.pushingpixels.aurora.window.*
 
 @Composable
 fun AuroraApplicationScope.DesktopApplication(
-    appName: String,
-    appState: AppState = rememberAppState(),
+    title: String,
+    state: AppState = rememberAppState(),
+    visible: Boolean = true,
     icon: Painter? = null,
+    iconFilterStrategy: IconFilterStrategy = IconFilterStrategy.Original,
+    windowTitlePaneConfiguration: AuroraWindowTitlePaneConfiguration = AuroraWindowTitlePaneConfigurations.AuroraPlain(),
+    resizable: Boolean = true,
+    enabled: Boolean = true,
+    focusable: Boolean = true,
     alwaysOnTop: Boolean = false,
-    resizeable: Boolean = true,
+    onPreviewKeyEvent: (androidx.compose.ui.input.key.KeyEvent) -> Boolean = { false },
+    onKeyEvent: (androidx.compose.ui.input.key.KeyEvent) -> Boolean = { false },
     menuCommands: @Composable (() -> CommandGroup)? = null,
     onClosed: (suspend () -> Unit)? = null,
     colors: Colors = DesktopApp.Constants.COLORS,
@@ -35,13 +40,13 @@ fun AuroraApplicationScope.DesktopApplication(
     MaterialTheme(
         colors = colors
     ) {
-        CompositionLocalProvider(LocalAppState provides appState) {
+        CompositionLocalProvider(LocalAppState provides state) {
             val appState = LocalAppState.current
             val scope = rememberCoroutineScope()
             val windowState = rememberWindowState(scope, appState)
             AuroraWindow(
                 skin = businessBlackSteelSkin(),
-                windowTitlePaneConfiguration = AuroraWindowTitlePaneConfigurations.AuroraPlain(),
+                windowTitlePaneConfiguration = windowTitlePaneConfiguration,
                 state = windowState,
                 onCloseRequest = {
                     scope.launch {
@@ -49,11 +54,17 @@ fun AuroraApplicationScope.DesktopApplication(
                         appState.close.value = true
                     }
                 },
-                title = appName,
+                title = title,
                 icon = icon,
-                resizable = resizeable,
+                resizable = resizable,
                 alwaysOnTop = alwaysOnTop,
-                menuCommands = menuCommands?.invoke()
+                menuCommands = menuCommands?.invoke(),
+                visible = visible,
+                iconFilterStrategy = iconFilterStrategy,
+                enabled = enabled,
+                focusable = focusable,
+                onPreviewKeyEvent = onPreviewKeyEvent,
+                onKeyEvent = onKeyEvent
             ) {
                 content()
             }

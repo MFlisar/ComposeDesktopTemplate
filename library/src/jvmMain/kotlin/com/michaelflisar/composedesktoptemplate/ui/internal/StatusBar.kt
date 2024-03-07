@@ -23,7 +23,9 @@ import com.michaelflisar.composedesktoptemplate.ui.todo.MyVerticalDivider
 
 @Composable
 internal fun StatusBar(
-    footer: (@Composable (modifier: Modifier) -> Unit)? = null
+    footer: @Composable() ((modifier: Modifier) -> Unit)? = null,
+    showInfosInFooter: Boolean,
+    showErrorsInFooter: Boolean
 ) {
     val appState = LocalAppState.current
     val state = appState.state.value
@@ -54,16 +56,20 @@ internal fun StatusBar(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 footer?.invoke(Modifier.weight(1f)) ?: Spacer(modifier = Modifier.weight(1f))
-                MyVerticalDivider(color = LocalContentColor.current)
-                Text(modifier = mod, text = "Infos: $infos", style = style, fontWeight = FontWeight.Bold)
-                MyVerticalDivider(color = LocalContentColor.current)
-                Text(
-                    modifier = mod,
-                    text = "Errors: $errors",
-                    style = style,
-                    fontWeight = FontWeight.Bold,
-                    color = if (errors > 0) MaterialTheme.colors.error else Color.Unspecified
-                )
+                if (showInfosInFooter) {
+                    MyVerticalDivider(color = LocalContentColor.current)
+                    Text(modifier = mod, text = "Infos: $infos", style = style, fontWeight = FontWeight.Bold)
+                }
+                if (showErrorsInFooter) {
+                    MyVerticalDivider(color = LocalContentColor.current)
+                    Text(
+                        modifier = mod,
+                        text = "Errors: $errors",
+                        style = style,
+                        fontWeight = FontWeight.Bold,
+                        color = if (errors > 0) MaterialTheme.colors.error else Color.Unspecified
+                    )
+                }
             }
             AnimatedVisibility(running != null) {
                 MyHorizontalDivider(color = LocalContentColor.current)
