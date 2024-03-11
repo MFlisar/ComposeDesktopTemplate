@@ -35,6 +35,7 @@ fun AuroraApplicationScope.DesktopApplication(
     menuCommands: @Composable (() -> CommandGroup)? = null,
     onClosed: (suspend () -> Unit)? = null,
     colors: Colors = DesktopApp.Constants.COLORS,
+    saveSettingsOnAppClose: Boolean = true,
     content: @Composable AuroraWindowScope.() -> Unit
 ) {
     MaterialTheme(
@@ -71,7 +72,9 @@ fun AuroraApplicationScope.DesktopApplication(
 
             // Close Action
             if (appState.close.value) {
-                appState.settings.value.write()
+                if (saveSettingsOnAppClose) {
+                    appState.settings.value.write()
+                }
                 exitApplication()
             }
         }
