@@ -161,14 +161,20 @@ private fun ContentCenter(modifier: Modifier) {
             }
 
             val selectedIndex = remember { mutableStateOf(0) }
+            val items = remember { mutableStateOf((1..100).map { "Item $it" }) }
             MyDropdown(
                 title = "List",
-                items = (1..100).map { "Item $it" },
+                items = items.value,
                 selected = selectedIndex,
                 filter = MyDropdown.Filter("Search") { filter, item ->
                     filter.isEmpty() || item.contains(filter, true)
                 }
             )
+
+            LaunchedEffect(Unit) {
+                if (items.value.size > 50)
+                    items.value = items.value.subList(0, 50)
+            }
         }
     }
 }

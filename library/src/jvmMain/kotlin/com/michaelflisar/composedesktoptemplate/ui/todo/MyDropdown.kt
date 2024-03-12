@@ -5,24 +5,18 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.Clear
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.PointerIcon
-import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.michaelflisar.composedesktoptemplate.classes.AppTheme
-import java.awt.Cursor
 
 object MyDropdown {
     class Filter<T>(
@@ -56,14 +50,18 @@ fun <T> MyDropdown(
     onSelectionChanged: ((T & Any) -> Unit)? = null
 ) {
     val selectedIndex = items.indexOf(selected.value)
-    val dropdownItems by remember {
+    val dropdownItems by remember(items) {
         derivedStateOf {
             items.mapIndexed { index, item -> MyDropdown.Item(mapper(item), index, mapper(item)) }
         }
     }
-    val dropdownFilter = filter?.let { f ->
-        MyDropdown.DropdownFilter(f.label) { filter: String, item: MyDropdown.Item<String> ->
-            f.filter(filter, items[item.index])
+    val dropdownFilter by remember(items, filter) {
+        derivedStateOf {
+            filter?.let { f ->
+                MyDropdown.DropdownFilter(f.label) { filter: String, item: MyDropdown.Item<String> ->
+                    f.filter(filter, items[item.index])
+                }
+            }
         }
     }
     MyDropdownImpl(
@@ -96,14 +94,18 @@ fun <T> MyDropdown(
     onSelectionChanged: ((T & Any) -> Unit)? = null
 ) {
     val selectedIndex = items.indexOf(selected)
-    val dropdownItems by remember {
+    val dropdownItems by remember(items) {
         derivedStateOf {
             items.mapIndexed { index, item -> MyDropdown.Item(mapper(item), index, mapper(item)) }
         }
     }
-    val dropdownFilter = filter?.let { f ->
-        MyDropdown.DropdownFilter(f.label) { filter: String, item: MyDropdown.Item<String> ->
-            f.filter(filter, items[item.index])
+    val dropdownFilter by remember(items, filter) {
+        derivedStateOf {
+            filter?.let { f ->
+                MyDropdown.DropdownFilter(f.label) { filter: String, item: MyDropdown.Item<String> ->
+                    f.filter(filter, items[item.index])
+                }
+            }
         }
     }
     MyDropdownImpl(
@@ -134,14 +136,18 @@ fun MyDropdown(
     onSelectionChanged: ((Int) -> Unit)? = null
 ) {
     val selectedIndex = selected.value
-    val dropdownItems by remember {
+    val dropdownItems by remember(items) {
         derivedStateOf {
             items.mapIndexed { index, item -> MyDropdown.Item(item, index, item) }
         }
     }
-    val dropdownFilter = filter?.let { f ->
-        MyDropdown.DropdownFilter(f.label) { filter: String, item: MyDropdown.Item<String> ->
-            f.filter(filter, items[item.index])
+    val dropdownFilter by remember(items, filter) {
+        derivedStateOf {
+            filter?.let { f ->
+                MyDropdown.DropdownFilter(f.label) { filter: String, item: MyDropdown.Item<String> ->
+                    f.filter(filter, items[item.index])
+                }
+            }
         }
     }
     MyDropdownImpl(
@@ -171,14 +177,18 @@ fun MyDropdown(
     filter: MyDropdown.Filter<String>? = null,
     onSelectionChanged: ((Int) -> Unit)? = null
 ) {
-    val dropdownItems by remember {
+    val dropdownItems by remember(items) {
         derivedStateOf {
             items.mapIndexed { index, item -> MyDropdown.Item(item, index, item) }
         }
     }
-    val dropdownFilter = filter?.let { f ->
-        MyDropdown.DropdownFilter(f.label) { filter: String, item: MyDropdown.Item<String> ->
-            f.filter(filter, items[item.index])
+    val dropdownFilter by remember(items, filter) {
+        derivedStateOf {
+            filter?.let { f ->
+                MyDropdown.DropdownFilter(f.label) { filter: String, item: MyDropdown.Item<String> ->
+                    f.filter(filter, items[item.index])
+                }
+            }
         }
     }
     MyDropdownImpl(modifier, title, dropdownItems, selected, enabled, color, backgroundColor, dropdownFilter) { item ->
@@ -213,7 +223,7 @@ private fun <T> MyDropdownImpl(
         val filteredItems = remember(items) { mutableStateOf(items) }
 
         if (filter != null) {
-            LaunchedEffect(filterText.value, expanded) {
+            LaunchedEffect(filterText.value, filteredItems.value, expanded) {
                 if (expanded) {
                     filteredItems.value = items.filter {
                         filter.filter(filterText.value, it)
