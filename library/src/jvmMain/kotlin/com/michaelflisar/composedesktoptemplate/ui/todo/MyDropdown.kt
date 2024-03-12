@@ -5,18 +5,24 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.PointerIcon
+import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.michaelflisar.composedesktoptemplate.classes.AppTheme
+import java.awt.Cursor
 
 object MyDropdown {
     class Filter<T>(
@@ -50,7 +56,11 @@ fun <T> MyDropdown(
     onSelectionChanged: ((T & Any) -> Unit)? = null
 ) {
     val selectedIndex = items.indexOf(selected.value)
-    val dropwdownItems = items.mapIndexed { index, item -> MyDropdown.Item(mapper(item), index, mapper(item)) }
+    val dropdownItems by remember {
+        derivedStateOf {
+            items.mapIndexed { index, item -> MyDropdown.Item(mapper(item), index, mapper(item)) }
+        }
+    }
     val dropdownFilter = filter?.let { f ->
         MyDropdown.DropdownFilter(f.label) { filter: String, item: MyDropdown.Item<String> ->
             f.filter(filter, items[item.index])
@@ -59,7 +69,7 @@ fun <T> MyDropdown(
     MyDropdownImpl(
         modifier,
         title,
-        dropwdownItems,
+        dropdownItems,
         selectedIndex,
         enabled,
         color,
@@ -86,7 +96,11 @@ fun <T> MyDropdown(
     onSelectionChanged: ((T & Any) -> Unit)? = null
 ) {
     val selectedIndex = items.indexOf(selected)
-    val dropwdownItems = items.mapIndexed { index, item -> MyDropdown.Item(mapper(item), index, mapper(item)) }
+    val dropdownItems by remember {
+        derivedStateOf {
+            items.mapIndexed { index, item -> MyDropdown.Item(mapper(item), index, mapper(item)) }
+        }
+    }
     val dropdownFilter = filter?.let { f ->
         MyDropdown.DropdownFilter(f.label) { filter: String, item: MyDropdown.Item<String> ->
             f.filter(filter, items[item.index])
@@ -95,7 +109,7 @@ fun <T> MyDropdown(
     MyDropdownImpl(
         modifier,
         title,
-        dropwdownItems,
+        dropdownItems,
         selectedIndex,
         enabled,
         color,
@@ -120,7 +134,11 @@ fun MyDropdown(
     onSelectionChanged: ((Int) -> Unit)? = null
 ) {
     val selectedIndex = selected.value
-    val dropdownItems = items.mapIndexed { index, item -> MyDropdown.Item(item, index, item) }
+    val dropdownItems by remember {
+        derivedStateOf {
+            items.mapIndexed { index, item -> MyDropdown.Item(item, index, item) }
+        }
+    }
     val dropdownFilter = filter?.let { f ->
         MyDropdown.DropdownFilter(f.label) { filter: String, item: MyDropdown.Item<String> ->
             f.filter(filter, items[item.index])
@@ -153,7 +171,11 @@ fun MyDropdown(
     filter: MyDropdown.Filter<String>? = null,
     onSelectionChanged: ((Int) -> Unit)? = null
 ) {
-    val dropdownItems = items.mapIndexed { index, item -> MyDropdown.Item(item, index, item) }
+    val dropdownItems by remember {
+        derivedStateOf {
+            items.mapIndexed { index, item -> MyDropdown.Item(item, index, item) }
+        }
+    }
     val dropdownFilter = filter?.let { f ->
         MyDropdown.DropdownFilter(f.label) { filter: String, item: MyDropdown.Item<String> ->
             f.filter(filter, items[item.index])
@@ -191,14 +213,17 @@ private fun <T> MyDropdownImpl(
         val filteredItems = remember(items) { mutableStateOf(items) }
 
         if (filter != null) {
-            LaunchedEffect(filterText.value) {
-                filteredItems.value = items.filter {
-                    filter.filter(filterText.value, it)
+            LaunchedEffect(filterText.value, expanded) {
+                if (expanded) {
+                    filteredItems.value = items.filter {
+                        filter.filter(filterText.value, it)
+                    }
                 }
             }
             LaunchedEffect(expanded) {
-                if (!expanded)
+                if (!expanded) {
                     filterText.value = ""
+                }
             }
         }
         Row(
@@ -248,6 +273,7 @@ private fun <T> MyDropdownImpl(
                 OutlinedTextField(
                     value = filterText.value,
                     label = { Text(filter.label) },
+                    singleLine = true,
                     onValueChange = { filterText.value = it },
                     modifier = Modifier.fillMaxWidth().padding(all = 8.dp)
                 )

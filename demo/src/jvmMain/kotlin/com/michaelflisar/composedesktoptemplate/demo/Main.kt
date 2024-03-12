@@ -163,7 +163,7 @@ private fun ContentCenter(modifier: Modifier) {
             val selectedIndex = remember { mutableStateOf(0) }
             MyDropdown(
                 title = "List",
-                items = (1..5).map { "Item $it" },
+                items = (1..100).map { "Item $it" },
                 selected = selectedIndex,
                 filter = MyDropdown.Filter("Search") { filter, item ->
                     filter.isEmpty() || item.contains(filter, true)
