@@ -17,7 +17,10 @@ import com.michaelflisar.composedesktoptemplate.classes.LocalAppState
 import com.michaelflisar.composedesktoptemplate.classes.Status
 import com.michaelflisar.composedesktoptemplate.classes.rememberAppState
 import com.michaelflisar.composedesktoptemplate.ui.*
-import com.michaelflisar.composedesktoptemplate.ui.components.*
+import com.michaelflisar.composedesktoptemplate.ui.components.VerticalTabIconItem
+import com.michaelflisar.composedesktoptemplate.ui.components.VerticalTabItem
+import com.michaelflisar.composedesktoptemplate.ui.components.VerticalTabStyle
+import com.michaelflisar.composedesktoptemplate.ui.components.VerticalTabs
 import com.michaelflisar.composedesktoptemplate.ui.todo.MyDropdown
 import com.michaelflisar.composedesktoptemplate.utils.L
 import kotlinx.coroutines.Dispatchers
@@ -158,7 +161,14 @@ private fun ContentCenter(modifier: Modifier) {
             }
 
             val selectedIndex = remember { mutableStateOf(0) }
-            MyDropdown(title = "List", items = (1..5).map { "Item $it" }, selected = selectedIndex)
+            MyDropdown(
+                title = "List",
+                items = (1..5).map { "Item $it" },
+                selected = selectedIndex,
+                filter = MyDropdown.Filter("Search") { filter, item ->
+                    filter.isEmpty() || item.contains(filter, true)
+                }
+            )
         }
     }
 }

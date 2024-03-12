@@ -18,6 +18,24 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.michaelflisar.composedesktoptemplate.classes.AppTheme
 
+object MyDropdown {
+    class Filter<T>(
+        val label: String,
+        val filter: (filter: String, item: T & Any) -> Boolean
+    )
+
+    internal class DropdownFilter<T>(
+        val label: String,
+        val filter: (filter: String, item: Item<T>) -> Boolean
+    )
+
+    internal class Item<T>(
+        val item: T & Any,
+        val index: Int,
+        val text: String
+    )
+}
+
 @Composable
 fun <T> MyDropdown(
     modifier: Modifier = Modifier,
@@ -28,12 +46,27 @@ fun <T> MyDropdown(
     enabled: Boolean = true,
     color: Color = Color.Unspecified,
     backgroundColor: Color = Color.Unspecified,
+    filter: MyDropdown.Filter<T>? = null,
     onSelectionChanged: ((T & Any) -> Unit)? = null
 ) {
-    val texts = items.map { mapper(it) }
     val selectedIndex = items.indexOf(selected.value)
-    MyDropdownImpl(modifier, title, texts, selectedIndex, enabled, color, backgroundColor) { index, item ->
-        val s = items[index]
+    val dropwdownItems = items.mapIndexed { index, item -> MyDropdown.Item(mapper(item), index, mapper(item)) }
+    val dropdownFilter = filter?.let { f ->
+        MyDropdown.DropdownFilter(f.label) { filter: String, item: MyDropdown.Item<String> ->
+            f.filter(filter, items[item.index])
+        }
+    }
+    MyDropdownImpl(
+        modifier,
+        title,
+        dropwdownItems,
+        selectedIndex,
+        enabled,
+        color,
+        backgroundColor,
+        dropdownFilter
+    ) { item ->
+        val s = items[item.index]
         selected.value = s
         onSelectionChanged?.invoke(s)
     }
@@ -49,12 +82,27 @@ fun <T> MyDropdown(
     enabled: Boolean = true,
     color: Color = Color.Unspecified,
     backgroundColor: Color = Color.Unspecified,
+    filter: MyDropdown.Filter<T>? = null,
     onSelectionChanged: ((T & Any) -> Unit)? = null
 ) {
-    val texts = items.map { mapper(it) }
     val selectedIndex = items.indexOf(selected)
-    MyDropdownImpl(modifier, title, texts, selectedIndex, enabled, color, backgroundColor) { index, item ->
-        onSelectionChanged?.invoke(items[index])
+    val dropwdownItems = items.mapIndexed { index, item -> MyDropdown.Item(mapper(item), index, mapper(item)) }
+    val dropdownFilter = filter?.let { f ->
+        MyDropdown.DropdownFilter(f.label) { filter: String, item: MyDropdown.Item<String> ->
+            f.filter(filter, items[item.index])
+        }
+    }
+    MyDropdownImpl(
+        modifier,
+        title,
+        dropwdownItems,
+        selectedIndex,
+        enabled,
+        color,
+        backgroundColor,
+        dropdownFilter
+    ) { item ->
+        onSelectionChanged?.invoke(items[item.index])
     }
 }
 
@@ -68,12 +116,28 @@ fun MyDropdown(
     enabled: Boolean = true,
     color: Color = Color.Unspecified,
     backgroundColor: Color = Color.Unspecified,
+    filter: MyDropdown.Filter<String>? = null,
     onSelectionChanged: ((Int) -> Unit)? = null
 ) {
     val selectedIndex = selected.value
-    MyDropdownImpl(modifier, title, items, selectedIndex, enabled, color, backgroundColor) { index, item ->
-        selected.value = index
-        onSelectionChanged?.invoke(index)
+    val dropdownItems = items.mapIndexed { index, item -> MyDropdown.Item(item, index, item) }
+    val dropdownFilter = filter?.let { f ->
+        MyDropdown.DropdownFilter(f.label) { filter: String, item: MyDropdown.Item<String> ->
+            f.filter(filter, items[item.index])
+        }
+    }
+    MyDropdownImpl(
+        modifier,
+        title,
+        dropdownItems,
+        selectedIndex,
+        enabled,
+        color,
+        backgroundColor,
+        dropdownFilter
+    ) { item ->
+        selected.value = item.index
+        onSelectionChanged?.invoke(item.index)
     }
 }
 
@@ -86,23 +150,31 @@ fun MyDropdown(
     enabled: Boolean = true,
     color: Color = Color.Unspecified,
     backgroundColor: Color = Color.Unspecified,
+    filter: MyDropdown.Filter<String>? = null,
     onSelectionChanged: ((Int) -> Unit)? = null
 ) {
-    MyDropdownImpl(modifier, title, items, selected, enabled, color, backgroundColor) { index, item ->
-        onSelectionChanged?.invoke(index)
+    val dropdownItems = items.mapIndexed { index, item -> MyDropdown.Item(item, index, item) }
+    val dropdownFilter = filter?.let { f ->
+        MyDropdown.DropdownFilter(f.label) { filter: String, item: MyDropdown.Item<String> ->
+            f.filter(filter, items[item.index])
+        }
+    }
+    MyDropdownImpl(modifier, title, dropdownItems, selected, enabled, color, backgroundColor, dropdownFilter) { item ->
+        onSelectionChanged?.invoke(item.index)
     }
 }
 
 @Composable
-private fun MyDropdownImpl(
+private fun <T> MyDropdownImpl(
     modifier: Modifier = Modifier,
     title: String,
-    items: List<String>,
+    items: List<MyDropdown.Item<T>>,
     selected: Int,
     enabled: Boolean,
     color: Color,
     backgroundColor: Color,
-    onSelectionChange: (index: Int, item: String) -> Unit
+    filter: MyDropdown.DropdownFilter<T>?,
+    onSelectionChange: (item: MyDropdown.Item<T>) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
     val rotation by animateFloatAsState(if (expanded) -180f else 0f)
@@ -115,58 +187,83 @@ private fun MyDropdownImpl(
         val labelColor =
             color.takeIf { it != Color.Unspecified } ?: MaterialTheme.colors.onSurface.copy(ContentAlpha.medium)
 
-            Row(
-                modifier = Modifier.fillMaxWidth()
-                    .clip(MaterialTheme.shapes.small)
-                    .border(1.dp, borderColor, MaterialTheme.shapes.small)
-                    .background(backgroundColor)
-                    .then(
-                        if (enabled) {
-                            Modifier.clickable {
-                                expanded = !expanded
-                            }
-                        } else Modifier
-                    )
-                    .padding(AppTheme.ITEM_SPACING)
-                ,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                val style1 =
-                    MaterialTheme.typography.body1.copy(fontSize = MaterialTheme.typography.body1.fontSize * .8f)
-                val style2 = MaterialTheme.typography.body1.copy(fontSize = MaterialTheme.typography.body1.fontSize)
-                Column(modifier = Modifier.weight(1f)) {
-                    if (title.isNotEmpty()) {
-                        Text(text = title, style = style1, fontWeight = FontWeight.Bold, color = labelColor)
-                        //Spacer(modifier = Modifier.height(4.dp))
-                    }
-                    Text(text = items.getOrElse(selected) { "" }, style = style2, color = color)
-                }
+        val filterText = remember { mutableStateOf("") }
+        val filteredItems = remember(items) { mutableStateOf(items) }
 
-                Icon(
-                    modifier = Modifier.rotate(rotation),
-                    imageVector = Icons.Default.ArrowDropDown,
-                    contentDescription = null,
-                    tint = color
+        if (filter != null) {
+            LaunchedEffect(filterText.value) {
+                filteredItems.value = items.filter {
+                    filter.filter(filterText.value, it)
+                }
+            }
+            LaunchedEffect(expanded) {
+                if (!expanded)
+                    filterText.value = ""
+            }
+        }
+        Row(
+            modifier = Modifier.fillMaxWidth()
+                .clip(MaterialTheme.shapes.small)
+                .border(1.dp, borderColor, MaterialTheme.shapes.small)
+                .background(backgroundColor)
+                .then(
+                    if (enabled) {
+                        Modifier.clickable {
+                            expanded = !expanded
+                        }
+                    } else Modifier
+                )
+                .padding(AppTheme.ITEM_SPACING),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            val style1 =
+                MaterialTheme.typography.body1.copy(fontSize = MaterialTheme.typography.body1.fontSize * .8f)
+            val style2 = MaterialTheme.typography.body1.copy(fontSize = MaterialTheme.typography.body1.fontSize)
+            Column(modifier = Modifier.weight(1f)) {
+                if (title.isNotEmpty()) {
+                    Text(text = title, style = style1, fontWeight = FontWeight.Bold, color = labelColor)
+                    //Spacer(modifier = Modifier.height(4.dp))
+                }
+                Text(
+                    text = items.find { it.index == selected }?.text ?: "",
+                    style = style2,
+                    color = color
                 )
             }
+
+            Icon(
+                modifier = Modifier.rotate(rotation),
+                imageVector = Icons.Default.ArrowDropDown,
+                contentDescription = null,
+                tint = color
+            )
+        }
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = {
                 expanded = false
             }
         ) {
-            items.forEachIndexed { index, item ->
+            if (filter != null) {
+                OutlinedTextField(
+                    value = filterText.value,
+                    label = { Text(filter.label) },
+                    onValueChange = { filterText.value = it },
+                    modifier = Modifier.fillMaxWidth().padding(all = 8.dp)
+                )
+            }
+            filteredItems.value.forEach {
                 DropdownMenuItem(
                     modifier = Modifier
                         .fillMaxWidth(),
                     onClick = {
-                        onSelectionChange(index, item)
+                        onSelectionChange(it)
                         expanded = false
                     }
                 ) {
                     Text(
-                        text = item,
-                        color = if (item == items.getOrElse(selected) { null }) MaterialTheme.colors.primary else Color.Unspecified,
+                        text = it.text,
+                        color = if (it.index == selected) MaterialTheme.colors.primary else Color.Unspecified,
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
