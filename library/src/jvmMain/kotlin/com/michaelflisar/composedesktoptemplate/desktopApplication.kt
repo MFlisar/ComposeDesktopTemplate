@@ -12,6 +12,7 @@ import com.michaelflisar.composedesktoptemplate.classes.AppState
 import com.michaelflisar.composedesktoptemplate.classes.LocalAppState
 import com.michaelflisar.composedesktoptemplate.classes.rememberAppState
 import com.michaelflisar.composedesktoptemplate.internal.rememberWindowState
+import com.michaelflisar.composedesktoptemplate.utils.L
 import kotlinx.coroutines.launch
 import org.pushingpixels.aurora.component.model.CommandGroup
 import org.pushingpixels.aurora.theming.IconFilterStrategy
@@ -38,6 +39,7 @@ fun AuroraApplicationScope.DesktopApplication(
     saveSettingsOnAppClose: Boolean = true,
     content: @Composable AuroraWindowScope.() -> Unit
 ) {
+    L.registerAppState(state)
     MaterialTheme(
         colors = colors
     ) {

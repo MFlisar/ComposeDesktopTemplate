@@ -37,7 +37,7 @@ fun main() {
         DesktopApplication(
             title = "Demo App",
             state = appState,
-            menuCommands = { buildMenu() },
+            menuCommands = { buildMenu() }
             //icon = painterResource("logo.png"),
             //alwaysOnTop = alwaysOnTop.value,
             //onClosed = {
@@ -77,6 +77,7 @@ private fun ContentLeft(modifier: Modifier) {
         "Settings",
         Settings.EXPANDED_LEFT_PANE,
         //showLabelWhenCollapsed = false
+        //collapsible = false
     ) {
         DesktopSettings(
             settings = Settings.ALL
@@ -105,14 +106,14 @@ private fun ContentCenter(modifier: Modifier) {
             Text(text = "Center")
             Button(
                 onClick = {
-                    L.d(appState, "Test Log")
+                    L.d("Test Log")
                 }
             ) {
                 Text("Test Log")
             }
             Button(
                 onClick = {
-                    L.e(appState, "Test Error")
+                    L.e("Test Error")
                 }
             ) {
                 Text("Test Error")
@@ -122,14 +123,14 @@ private fun ContentCenter(modifier: Modifier) {
                 onClick = {
                     if (appState.state.value == Status.None) {
                         scope.launch(Dispatchers.IO) {
-                            L.d(appState, "Work wird gestartet...")
+                            L.d("Work wird gestartet...")
                             appState.state.value = Status.Running("Doing some work...")
                             delay(5000)
                             appState.state.value = Status.None
-                            L.d(appState, "Work erfolgreich erledigt!", true)
+                            L.d("Work erfolgreich erledigt!", true)
                         }
                     } else {
-                        L.e(appState, "Work läuft bereits!!")
+                        L.e("Work läuft bereits!!")
                     }
                 }
             ) {
@@ -192,17 +193,17 @@ private fun buildMenu(): CommandGroup {
                             Command(
                                 text = "New",
                                 action = {
-                                    L.d(appState, "Menu => New")
+                                    L.d("Menu => New")
                                 }),
                             Command(
                                 text = "Open",
                                 action = {
-                                    L.d(appState, "Menu => Open")
+                                    L.d("Menu => Open")
                                 }),
                             Command(
                                 text = "Save",
                                 action = {
-                                    L.d(appState, "Menu => Save")
+                                    L.d("Menu => Save")
                                 })
                         )
                     )
@@ -211,7 +212,7 @@ private fun buildMenu(): CommandGroup {
             Command(
                 text = "Edit",
                 action = {
-                    L.d(appState, "Menu => Edit")
+                    L.d("Menu => Edit")
                 }
             )
         )

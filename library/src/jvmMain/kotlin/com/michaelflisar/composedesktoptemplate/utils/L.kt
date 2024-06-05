@@ -9,6 +9,28 @@ object L {
 
     var ADVANCED_LOGGING = false
 
+    fun d(info: String, success: Boolean = false) {
+        log(info, if (success) InfoType.DebugSuccess else InfoType.Debug)
+    }
+
+    fun e(info: String) {
+        log(info, InfoType.Error)
+    }
+
+    fun e(e: Exception) {
+        log(e.message ?: "ERROR", InfoType.Error)
+    }
+
+    internal fun registerAppState(state: AppState) {
+        this.appState = state
+    }
+
+    // -----------------
+    // private functions
+    // -----------------
+
+    private var appState: AppState? = null
+
     private val ANONYMOUS_CLASS = Pattern.compile("(\\$\\d+)+$")
 
     private fun getCaller(index: Int): String {
@@ -63,26 +85,13 @@ object L {
     }
 
     private fun log(
-        appState: AppState,
         info: String,
         type: InfoType = InfoType.Debug,
         exception: Exception? = null
     ) {
         val caller = getCaller(5)
         val info = LogLine(caller, info, type = type, exception = exception)
-        appState.addLog(info)
+        appState?.addLog(info)
         println(info.getConsoleLog())
-    }
-
-    fun d(appState: AppState, info: String, success: Boolean = false) {
-        log(appState, info, if (success) InfoType.DebugSuccess else InfoType.Debug)
-    }
-
-    fun e(appState: AppState, info: String) {
-        log(appState, info, InfoType.Error)
-    }
-
-    fun e(appState: AppState, e: Exception) {
-        log(appState, e.message ?: "ERROR", InfoType.Error)
     }
 }

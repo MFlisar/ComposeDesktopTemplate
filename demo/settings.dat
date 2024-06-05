@@ -3,7 +3,7 @@ Integer;window_height;747
 Integer;window_x;167
 Integer;window_y;102
 Integer;window_placement;0
-Bool;ExpandedLeftPane;false
+Bool;ExpandedLeftPane;true
 Bool;ExpandedRightPane;true
 Bool;AutoOpenLogPageOnNewLog;true
 Bool;AutoOpenLogPageOnError;true

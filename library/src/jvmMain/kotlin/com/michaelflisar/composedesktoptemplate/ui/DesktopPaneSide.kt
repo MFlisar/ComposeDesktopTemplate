@@ -42,6 +42,7 @@ fun DesktopPaneSide(
     expanded: UISetting.Bool,
     divider: Boolean = true,
     showLabelWhenCollapsed: Boolean = true,
+    collapsible: Boolean = true,
     content: (@Composable ColumnScope.() -> Unit)
 ) {
     val appState = LocalAppState.current
@@ -59,13 +60,15 @@ fun DesktopPaneSide(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 if (side == PaneSide.Left) {
-                    ExpandIcon(expanded)
+                    if (collapsible)
+                        ExpandIcon(expanded)
                     Title(label, expanded)
                     //Spacer(Modifier.width(AppTheme.CONTENT_PADDING_SMALL))
                 } else {
                     //Spacer(Modifier.width(AppTheme.CONTENT_PADDING_SMALL))
                     Title(label, expanded)
-                    ExpandIcon(expanded)
+                    if (collapsible)
+                        ExpandIcon(expanded)
                 }
             }
 
