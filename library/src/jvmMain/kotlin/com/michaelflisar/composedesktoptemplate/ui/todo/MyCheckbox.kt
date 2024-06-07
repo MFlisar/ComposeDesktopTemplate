@@ -57,17 +57,18 @@ fun MyCheckbox(
     ) {
         if (title.isNotEmpty()) {
             Text(
-                modifier = Modifier,//.weight(1f),
+                modifier = Modifier.weight(1f, false),
                 text = title,
-                fontWeight = fontWeight)
+                fontWeight = fontWeight
+            )
         }
         Icon(
             imageVector = if (checked) Icons.Default.CheckBox else Icons.Default.CheckBoxOutlineBlank,
             contentDescription = null,
-            tint = if (checked) { (
-                    color.takeIf { it != Color.Unspecified } ?: MaterialTheme.colors.secondary)
-            }else {
-                colorUnselected.takeIf { it != Color.Unspecified } ?:  MaterialTheme.colors.onSurface.copy(alpha = 0.6f)
+            tint = if (checked) {
+                (color.takeIf { it != Color.Unspecified } ?: MaterialTheme.colors.secondary)
+            } else {
+                colorUnselected.takeIf { it != Color.Unspecified } ?: MaterialTheme.colors.onSurface.copy(alpha = 0.6f)
             }
         )
     }
